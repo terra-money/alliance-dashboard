@@ -1,12 +1,9 @@
-
-import Image from "next/image";
-
 export default function Pill({ asset, data }: { asset: string, data?: any }) {
   const percentage = parseFloat(data?.change24h ?? '0');
 
   return (
     <div className="flex min-w-1/2 md:min-w-1/5 custom_card gap-3">
-      <Image
+      <img
         src={asset}
         alt='Coin image'
         width={45}

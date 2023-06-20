@@ -1,7 +1,6 @@
 "use client";
 
 import { Alliance, AllianceParams, TotalSupply } from "@/types/ResponseTypes";
-import Image from "next/image";
 import { supportedChains, supportedTokens } from "@/const/Variables";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
@@ -97,7 +96,7 @@ export default function Table({
               <tr key={row.denom}>
                 <td className="pt-4 min-w-8r md:min-w-full">
                   {
-                    getIcon(row) ? <Image
+                    getIcon(row) ? <img
                       src={`${getIcon(row)}`}
                       alt='Coin image'
                       width={45}

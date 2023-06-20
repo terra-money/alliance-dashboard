@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import styles from '@/styles/Dropdown.module.css';
-import Image from 'next/image';
 import { supportedChains } from '@/const/Variables';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -38,7 +37,7 @@ export default function Dropdown() {
         <ul>
           {Object.keys(supportedChains).map((chain) => (
             <li key={chain} className='flex gap-3 p-3 items-center' onClick={() => setSelected(supportedChains[chain])}>
-              <Image
+              <img
                 src={supportedChains[chain].icon}
                 alt={chain}
                 width={30}
