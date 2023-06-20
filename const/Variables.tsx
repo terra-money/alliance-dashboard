@@ -71,7 +71,7 @@ export const supportedChains: any = {
     },
     'ibc/40C29143BF4153B365089E40E437B7AA819672646C45BB0A5F1E10915A0B6708': {
       name: 'bLuna',
-      icon: 'https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/bLuna.svg',
+      icon: 'https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/bLuna.png',
       color: '#ff7500'
     }
   },
