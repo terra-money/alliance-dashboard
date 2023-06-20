@@ -42,7 +42,7 @@ export const supportedChains: any = {
     icon: 'https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Carbon.svg',
     'ibc/62A3870B9804FC3A92EAAA1F0F3F07E089DBF76CC521466CA33F5AAA8AD42290': {
       name: 'ampLuna',
-      icon: 'https://www.erisprotocol.com/assets/ampLuna100.png',
+      icon: 'https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/ampLuna.svg',
       color: '#324ab2'
     },
     'ibc/FBEE20115530F474F8BBE1460DA85437C3FBBFAF4A5DEBD71CA6B9C40559A161': {
@@ -66,12 +66,12 @@ export const supportedChains: any = {
     icon: 'https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Migaloo.svg',
     'ibc/05238E98A143496C8AF2B6067BABC84503909ECE9E45FBCBAC2CBA5C889FD82A': {
       name: 'ampLuna',
-      icon: 'https://www.erisprotocol.com/assets/ampLuna100.png',
+      icon: 'https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/ampLuna.svg',
       color: '#324ab2'
     },
     'ibc/40C29143BF4153B365089E40E437B7AA819672646C45BB0A5F1E10915A0B6708': {
       name: 'bLuna',
-      icon: 'https://gravedigger.backbonelabs.io/boneluna.png',
+      icon: 'https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/bLuna.svg',
       color: '#ff7500'
     }
   },
