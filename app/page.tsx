@@ -78,7 +78,7 @@ export default function Home() {
       <h1 className="head_text">
         <span className='terra_gradient'>Explore Alliance</span>
       </h1>
-      <span className="font-bold">Powered by BigLabs</span>
+      <span className="font-bold">Powered by Big labs</span>
       <div className="flex pt-3 pb-3 gap-3 mt-12 overflow-auto">
         {
           usdValues && pills.map(pill => {
