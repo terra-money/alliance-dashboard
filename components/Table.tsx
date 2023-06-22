@@ -61,10 +61,10 @@ export default function Table({
   }
 
   const getTakeRate = (row: Alliance): number => {
-    return (1 - (1 - parseFloat(row.take_rate)) ** (SECONDS_IN_YEAR / parseInt(chainParams.take_rate_claim_interval)));
+    return 1 - (1 - parseFloat(row.take_rate)) ** (SECONDS_IN_YEAR / parseInt(chainParams.take_rate_claim_interval));
   }
 
-  const totalSupplyIncoming = (row: Alliance) => {
+  const annualRewardsToLunaStakers = (row: Alliance) => {
     const usdNative = getNativeUsdValue();
 
     return (usdNative * currentChain.inflation * (parseFloat(row.reward_weight) / (1 + (totalRewardWeight))));
@@ -73,7 +73,7 @@ export default function Table({
   const getAdditionalYield = (row: Alliance) => {
     const usdStaked = getLsdUsdValue(row);
 
-    return ((totalSupplyIncoming(row) - lsdLosePerYear(row)) / usdStaked).toLocaleString('en-US');
+    return ((annualRewardsToLunaStakers(row) - lsdLosePerYear(row)) / usdStaked).toLocaleString('en-US');
   }
 
   return (
