@@ -20,7 +20,7 @@ export default function Table({
   totalSupply: TotalSupply,
   currentChain: any
 }) {
-  const headers = ["Name", "Staked Amount", "USD Value", "Take Rate", "Reward Rate", "Additional Yield"];
+  const headers = ["Name", "Total Staked", "Total Value Staked", "Take Rate", "Reward Weight", "Additional Yield"];
   const params = useSearchParams();
   const totalRewardWeight = useMemo<number>(() => {
     let total = 0;
@@ -105,9 +105,9 @@ export default function Table({
                   }
                 </td>
                 <td className='text-left pt-4 min-w-8r md:min-w-full'>{(parseInt(row.total_tokens) / 1_000_000).toLocaleString('en-US')}</td>
-                <td className='text-left pt-4 min-w-8r md:min-w-full'>{getLsdUsdValue(row).toLocaleString('en-US', {
+                <td className='text-left pt-4 min-w-8r md:min-w-full'>${getLsdUsdValue(row).toLocaleString('en-US', {
                   maximumFractionDigits: 2
-                })}$</td>
+                })}</td>
                 <td className='text-right pt-4 min-w-8r md:min-w-full'>{(getTakeRate(row) * 100).toLocaleString('en-US')}%</td>
                 <td className='text-right pt-4 min-w-8r md:min-w-full'>{(parseFloat(row.reward_weight) * 100).toLocaleString('en-US')}%</td>
                 <td className='text-right pt-4 min-w-8r md:min-w-full'>{getAdditionalYield(row)}%</td>

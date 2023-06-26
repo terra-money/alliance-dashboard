@@ -79,6 +79,16 @@ export default function Home() {
         <span className='terra_gradient'>Explore Alliance</span>
       </h1>
       <span className="font-bold">Powered by Big labs</span>
+      <div className="info_text_bold"> 
+        <h3 >
+          Alliance allows blockchains to trade yield with each other. 
+        </h3>
+      </div>
+      <div className="info_text"> 
+        <h3 >
+          Learn more about Alliance <a className='btn btn-link text-underline' href='https://alliance.terra.money/'><u>here</u></a>
+        </h3>
+      </div>
       <div className="flex pt-3 pb-3 gap-3 mt-12 overflow-auto">
         {
           usdValues && pills.map(pill => {

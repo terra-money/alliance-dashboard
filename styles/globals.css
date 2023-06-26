@@ -26,6 +26,14 @@
   @apply bg-gradient-to-r from-blue-900 via-blue-300 to-green-700 bg-clip-text text-transparent;
 }
 
+.info_text {
+  @apply mt-2 text-base leading-[1.15] text-black flex justify-center items-center;
+}
+
+.info_text_bold {
+  @apply mt-2 text-base font-bold leading-[1.15] text-black flex justify-center items-center;
+}
+
 .green_gradient {
   @apply bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent;
 }

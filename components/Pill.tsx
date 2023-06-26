@@ -11,7 +11,7 @@ export default function Pill({ asset, data }: { asset: string, data?: any }) {
         className="object-contain"
       />
       <div className="flex flex-col w-full">
-        <h2>{parseFloat(data?.usd ?? '0').toLocaleString('en-US')}$</h2>
+        <h2>${parseFloat(data?.usd ?? '0').toLocaleString('en-US')}</h2>
         <h3 className={`${percentage < 0 ? 'text-red-400' : 'text-green-500'}`}>
           {
             percentage < 0 ? (
