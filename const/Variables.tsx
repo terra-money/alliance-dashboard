@@ -3,21 +3,25 @@ import { Pill } from "@/types/ResponseTypes";
 export const pills: Pill[] = [
   {
     id: 4,
+    name: 'Luna',
     symbol: 'https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/Luna.svg',
     token: 'uluna'
   },
   {
     id: 1,
+    name: 'Kuji',
     symbol: 'https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/Kuji.svg',
     token: 'ibc/BB6BCDB515050BAE97516111873CCD7BCF1FD0CCB723CC12F3C4F704D6C646CE'
   },
   {
     id: 2,
+    name: 'Carbon',
     symbol: 'https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/Carbon.svg',
     token: 'ibc/8FEFAE6AECF6E2A255585617F781F35A8D5709A545A804482A261C0C9548A9D3'
   },
   {
     id: 3,
+    name: 'Whale',
     symbol: 'https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/Whale.svg',
     token: 'ibc/EDD6F0D66BCD49C1084FB2C35353B4ACD7B9191117CE63671B61320548F7C89D'
   },

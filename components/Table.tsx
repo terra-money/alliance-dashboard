@@ -4,6 +4,7 @@ import { Alliance, AllianceParams, TotalSupply } from "@/types/ResponseTypes";
 import { supportedChains, supportedTokens } from "@/const/Variables";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
+import { Tooltip } from "@nextui-org/react";
 
 const SECONDS_IN_YEAR = 31_536_000;
 
@@ -95,14 +96,16 @@ export default function Table({
             return (
               <tr key={row.denom}>
                 <td className="pt-4 min-w-8r md:min-w-full">
-                  {
-                    getIcon(row) ? <img
-                      src={`${getIcon(row)}`}
-                      alt='Coin image'
-                      width={45}
-                      height={45}
-                    /> : null
-                  }
+                  <Tooltip content={supportedChains[params.get('selected') ?? 'carbon'][row.denom]?.name}>
+                    {
+                      getIcon(row) ? <img
+                        src={`${getIcon(row)}`}
+                        alt='Coin image'
+                        width={45}
+                        height={45}
+                      /> : null
+                    }
+                  </Tooltip>
                 </td>
                 <td className='text-left pt-4 min-w-8r md:min-w-full'>{(parseInt(row.total_tokens) / 1_000_000).toLocaleString('en-US')}</td>
                 <td className='text-left pt-4 min-w-8r md:min-w-full'>${getLsdUsdValue(row).toLocaleString('en-US', {

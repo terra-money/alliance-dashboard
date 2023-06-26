@@ -6,6 +6,7 @@ import Pill from "@/components/Pill";
 import Table from "@/components/Table";
 import { pills, supportedChains } from "@/const/Variables";
 import { Alliance, AllianceParams, AllianceParamsResponse, AllianceResponse, TotalSupply, TotalSupplyAmount } from "@/types/ResponseTypes";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -79,21 +80,21 @@ export default function Home() {
         <span className='terra_gradient'>Explore Alliance</span>
       </h1>
       <span className="font-bold">Powered by Big labs</span>
-      <div className="info_text_bold"> 
+      <div className="info_text_bold mt-8"> 
         <h3 >
           Alliance allows blockchains to trade yield with each other. 
         </h3>
       </div>
-      <div className="info_text"> 
-        <h3 >
-          Learn more about Alliance <a className='btn btn-link text-underline' href='https://alliance.terra.money/'><u>here</u></a>
+      <div className="info_text mt-2"> 
+        <h3>
+          Learn more about Alliance <Link href='https://alliance.terra.money/'><u>here</u></Link>
         </h3>
       </div>
       <div className="flex pt-3 pb-3 gap-3 mt-12 overflow-auto">
         {
-          usdValues && pills.map(pill => {
-            return <Pill key={pill.id} asset={pill.symbol} data={usdValues[pill.token]} />
-          })
+          usdValues && pills.map(pill => (
+            <Pill key={pill.id} pill={pill} data={usdValues[pill.token]} />
+          ))
         }
       </div>
       <div className="flex w-full flex-col lg:flex-row gap-3">

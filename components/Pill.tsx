@@ -1,15 +1,24 @@
-export default function Pill({ asset, data }: { asset: string, data?: any }) {
+import { Pill } from '@/types/ResponseTypes';
+import { Tooltip } from '@nextui-org/react';
+
+export default function Pill({ pill, data }: { pill: Pill, data?: any }) {
   const percentage = parseFloat(data?.change24h ?? '0');
 
+  console.log(data);
+
   return (
-    <div className="flex min-w-1/2 md:min-w-1/5 custom_card gap-3">
-      <img
-        src={asset}
-        alt='Coin image'
-        width={45}
-        height={45}
-        className="object-contain"
-      />
+    <div className="flex min-w-1/2 md:min-w-1/4 custom_card gap-3">
+      <div className='flex items-center'>
+        <Tooltip content={pill.name}>
+          <img
+            src={pill.symbol}
+            alt='Coin image'
+            width={45}
+            height={45}
+            className="object-contain"
+          />
+        </Tooltip>
+      </div>
       <div className="flex flex-col w-full">
         <h2>${parseFloat(data?.usd ?? '0').toLocaleString('en-US')}</h2>
         <h3 className={`${percentage < 0 ? 'text-red-400' : 'text-green-500'}`}>

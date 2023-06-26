@@ -46,6 +46,7 @@ export interface TotalSupply {
 
 export interface Pill {
   id: number,
+  name: string,
   symbol: string,
   token: string
 }
