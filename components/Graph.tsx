@@ -66,7 +66,7 @@ export default function Graph({ values }: { values: Alliance[] }) {
 
   return (
     values.length > 0 ? <Doughnut data={data} options={options} /> : <div>
-      <p className="p-3 text-center font-bold font-inter">No data for the selected chain</p>
+      <p className="p-3 text-center font-bold font-inter">This chain has not whitelisted any Alliance assets yet</p>
     </div>
   )
 }
