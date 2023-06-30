@@ -44,20 +44,17 @@ export default function Table({
     if (!tokenName) return 0;
 
     const value = usdValues[supportedTokens[tokenName]];
-
     return ((value ? value.usd : 0) * parseInt(row.total_tokens) / 1_000_000);
   }
 
   const getNativeUsdValue = () => {
     const tokenName = supportedChains[params.get('selected') ?? 'carbon']?.denom;
     const value = usdValues[supportedTokens[tokenName]];
-
     return ((value ? value.usd : 0) * parseInt(totalSupply.amount) / 1_000_000);
   }
 
   const lsdLosePerYear = (row: Alliance) => {
     const usdStaked = getLsdUsdValue(row);
-
     return usdStaked * getTakeRate(row);
   }
 
@@ -67,14 +64,12 @@ export default function Table({
 
   const annualRewardsToLunaStakers = (row: Alliance) => {
     const usdNative = getNativeUsdValue();
-
     return (usdNative * currentChain.inflation * (parseFloat(row.reward_weight) / (1 + (totalRewardWeight))));
   }
 
   const getAdditionalYield = (row: Alliance) => {
     const usdStaked = getLsdUsdValue(row);
-
-    return ((annualRewardsToLunaStakers(row) - lsdLosePerYear(row)) / usdStaked).toLocaleString('en-US');
+    return (100* (annualRewardsToLunaStakers(row) - lsdLosePerYear(row)) / usdStaked).toLocaleString('en-US');
   }
 
   return (
@@ -120,7 +115,7 @@ export default function Table({
         }
       </tbody>
     </table> : <div>
-      <p className="p-3 text-center font-bold font-inter">No data for the selected chain</p>
+      <p className="p-3 text-center font-bold font-inter">This chain has not whitelisted any Alliance assets yet</p>
     </div>
   );
 }
