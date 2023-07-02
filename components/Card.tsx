@@ -13,7 +13,7 @@ export default function Card({
       <div className="flex justify-between mb-6 pr-4 pl-4">
         <h1 className="text-3xl font-medium">{name}</h1>
       </div>
-      <div className={'pr-4 pl-4 max-h-80 overflow-auto'}>
+      <div className={'pr-4 pl-4 pb-3 pt-3 max-h-80 overflow-auto'}>
         {children}
       </div>
     </div>

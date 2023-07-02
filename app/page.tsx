@@ -2,76 +2,44 @@
 
 import Card from "@/components/Card";
 import Graph from "@/components/Graph";
+import LoadingComponent from "@/components/LoadingComponent";
 import Pill from "@/components/Pill";
 import Table from "@/components/Table";
 import { pills, supportedChains } from "@/const/Variables";
-import { Alliance, AllianceParams, AllianceParamsResponse, AllianceResponse, TotalSupply, TotalSupplyAmount } from "@/types/ResponseTypes";
+import { Alliance, AllianceResponse } from "@/types/ResponseTypes";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const [usdValues, setUsdValues] = useState<any>();
-  const [data, setData] = useState<{
-    chainValues: Alliance[],
-    chainParams: AllianceParams,
-    totalSupply: TotalSupply,
-    currentChain: any,
-  }>({
-    chainValues: [],
-    chainParams: {
-      last_take_rate_claim_time: '',
-      reward_delay_time: '',
-      take_rate_claim_interval: ''
-    },
-    totalSupply: {
-      amount: '',
-      denom: ''
-    },
-    currentChain: {}
-  });
+  const [data, setData] = useState<Alliance[]>([]);
   const params = useSearchParams();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     ; (async () => {
       if (!usdValues) {
+        setLoading(true);
         const result = await fetch('https://price.api.tfm.com/tokens/?limit=1500');
         const json = await result.json();
         setUsdValues(json);
+        setLoading(false);
       }
 
       const chain = supportedChains[params.get('selected') ?? 'carbon'];
+      let response = [];
 
       try {
         const chainResponse = await fetch(`${chain.lcd}/terra/alliances?pagination.limit=100`);
         const resp = await chainResponse.json() as AllianceResponse;
-        const chainParams = await fetch(`${chain.lcd}/terra/alliances/params`);
-        const params = await chainParams.json() as AllianceParamsResponse;
-        const totalSupply = await fetch(`${chain.lcd}/cosmos/bank/v1beta1/supply/by_denom?denom=${chain.denom}`);
-        const supply = await totalSupply.json() as TotalSupplyAmount;
-
-        setData({
-          chainValues: resp.alliances,
-          chainParams: params.params,
-          totalSupply: supply.amount,
-          currentChain: chain,
-        });
-      } catch (error) {
-        setData({
-          chainValues: [...[]],
-          chainParams: {
-            last_take_rate_claim_time: '',
-            reward_delay_time: '',
-            take_rate_claim_interval: ''
-          },
-          totalSupply: {
-            amount: '',
-            denom: ''
-          },
-          currentChain: chain,
-        });
+        response = [...resp.alliances];
+      } catch {
+        response = [...[]];
       }
-    })()
+
+      setData(response);
+    })();
   }, [params]);
 
   return (
@@ -80,38 +48,36 @@ export default function Home() {
         <span className='terra_gradient'>Explore Alliance</span>
       </h1>
       <span className="font-bold">Powered by Big labs</span>
-      <div className="info_text_bold mt-8"> 
+      <div className="info_text_bold mt-8">
         <h3 >
-          Alliance allows blockchains to trade yield with each other. 
+          Alliance allows blockchains to trade yield with each other.
         </h3>
       </div>
-      <div className="info_text mt-2"> 
+      <div className="info_text mt-2">
         <h3>
           Learn more about Alliance <Link href='https://alliance.terra.money/'><u>here</u></Link>
         </h3>
       </div>
-      <div className="flex pt-3 pb-3 gap-3 mt-12 overflow-auto">
-        {
-          usdValues && pills.map(pill => (
-            <Pill key={pill.id} pill={pill} data={usdValues[pill.token]} />
-          ))
-        }
+      <div className="flex flex-col pt-3 pb-3 mt-12 overflow-auto">
+        <LoadingComponent isLoading={loading} values={usdValues}>
+          <div className="flex gap-3">
+            {
+              usdValues && pills.map(pill => (
+                <Pill key={pill.id} pill={pill} data={usdValues[pill.token]} />
+              ))
+            }
+          </div>
+        </LoadingComponent>
       </div>
       <div className="flex w-full flex-col lg:flex-row gap-3">
         <div className="w-full lg:w-4/6">
           <Card name="Assets">
-            <Table
-              values={data.chainValues}
-              chainParams={data.chainParams}
-              usdValues={usdValues}
-              totalSupply={data.totalSupply}
-              currentChain={data.currentChain}
-            />
+            <Table usdValues={usdValues} values={data} />
           </Card>
         </div>
         <div className="w-full lg:w-2/6">
           <Card name="Overview" className="flex flex-col items-center overflow-auto">
-            <Graph values={data.chainValues} />
+            <Graph values={data} />
           </Card>
         </div>
       </div>

@@ -1,25 +1,19 @@
-"use client";
+'use client';
 
-import { Alliance, AllianceParams, TotalSupply } from "@/types/ResponseTypes";
-import { headers, supportedChains, supportedTokens } from "@/const/Variables";
+import { Alliance, AllianceParams, AllianceParamsResponse, TotalSupply, TotalSupplyAmount } from "@/types/ResponseTypes";
+import { headers, supportedChains } from "@/const/Variables";
 import { useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Tooltip } from "@nextui-org/react";
-
-const SECONDS_IN_YEAR = 31_536_000;
+import { getAdditionalYield, getIcon, getLsdUsdValue, getTakeRate, toLocaleString } from "@/const/AllianceFunctions";
+import LoadingComponent from "./LoadingComponent";
 
 export default function Table({
   values,
   usdValues,
-  chainParams,
-  totalSupply,
-  currentChain,
 }: {
   values: Alliance[],
   usdValues: any,
-  chainParams: AllianceParams,
-  totalSupply: TotalSupply,
-  currentChain: any
 }) {
   const params = useSearchParams();
   const totalRewardWeight = useMemo<number>(() => {
@@ -31,104 +25,111 @@ export default function Table({
 
     return total;
   }, [values]);
+  const [data, setData] = useState<{
+    chainParams: AllianceParams,
+    totalSupply: TotalSupply,
+    currentChain: any,
+  }>({
+    chainParams: {
+      last_take_rate_claim_time: '',
+      reward_delay_time: '',
+      take_rate_claim_interval: ''
+    },
+    totalSupply: {
+      amount: '',
+      denom: ''
+    },
+    currentChain: {}
+  });
+  const [loading, setLoading] = useState(true);
 
-  const getIcon = (row: Alliance) => {
-    const chainMapped = supportedChains[params.get('selected') ?? 'carbon'][row.denom];
-    return chainMapped ? chainMapped.icon : '';
-  }
+  useEffect(() => {
+    ; (async () => {
+      setLoading(true);
 
-  const getLsdUsdValue = (row: Alliance): number => {
-    const tokenName = supportedChains[params.get('selected') ?? 'carbon'][row.denom]?.name;
+      if (values.length > 0) {
+        const chain = supportedChains[params.get('selected') ?? 'carbon'];
 
-    if (!tokenName) return 0;
+        try {
+          const chainParams = await fetch(`${chain.lcd}/terra/alliances/params`);
+          const params = await chainParams.json() as AllianceParamsResponse;
+          const totalSupply = await fetch(`${chain.lcd}/cosmos/bank/v1beta1/supply/by_denom?denom=${chain.denom}`);
+          const supply = await totalSupply.json() as TotalSupplyAmount;
 
-    const value = usdValues[supportedTokens[tokenName]];
-    return ((value ? value.usd : 0) * parseInt(row.total_tokens) / 1_000_000);
-  }
+          setData({
+            chainParams: params.params,
+            totalSupply: supply.amount,
+            currentChain: chain,
+          });
+        } catch (error) {
+          setData({
+            chainParams: {
+              last_take_rate_claim_time: '',
+              reward_delay_time: '',
+              take_rate_claim_interval: ''
+            },
+            totalSupply: {
+              amount: '',
+              denom: ''
+            },
+            currentChain: chain,
+          });
+        }
+      }
 
-  const getNativeUsdValue = () => {
-    const tokenName = supportedChains[params.get('selected') ?? 'carbon']?.denom;
-    const value = usdValues[supportedTokens[tokenName]];
-    return ((value ? value.usd : 0) * parseInt(totalSupply.amount) / 1_000_000);
-  }
-
-  const lsdLosePerYear = (row: Alliance) => {
-    const usdStaked = getLsdUsdValue(row);
-    return usdStaked * getTakeRate(row);
-  }
-
-  const getTakeRate = (row: Alliance): number => {
-    return 1 - (1 - parseFloat(row.take_rate)) ** (SECONDS_IN_YEAR / parseInt(chainParams.take_rate_claim_interval));
-  }
-
-  const annualRewardsToLunaStakers = (row: Alliance) => {
-    const usdNative = getNativeUsdValue();
-    return (usdNative * currentChain.inflation * (parseFloat(row.reward_weight) / (1 + (totalRewardWeight))));
-  }
-
-  const getAdditionalYield = (row: Alliance) => {
-    const usdStaked = getLsdUsdValue(row);
-    const percentage = currentChain.name === 'Carbon' ? 1 : 100;
-    return (percentage * (annualRewardsToLunaStakers(row) - lsdLosePerYear(row)) / usdStaked).toLocaleString('en-US');
-  }
+      setLoading(false);
+    })()
+  }, [params, values]);
 
   return (
-    values.length > 0 ? <table className="w-full h-full border-collapse mb-3">
-      <thead>
-        <tr className="table_row">
-          {
-            headers.map((v, i) => {
-              return (
-                <th key={v.title} className={`small min-w-8r md:min-w-full`}>
-                  <div className={`${i < 3 ? 'justify-start' : 'justify-end'} flex items-center gap-1`}>
+    <LoadingComponent isLoading={loading} values={values}>
+      <table className="w-full h-full border-collapse mb-3">
+        <thead>
+          <tr className="table_row">
+            {
+              headers.map(v => (
+                <th key={v.title} className='small min-w-8r md:min-w-full'>
+                  <div className='justify-start lg:justify-center flex items-center gap-1'>
                     {v.title}
                     {
                       v.tooltip ? (
                         <Tooltip content={v.tooltip}>
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black" className="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="w-5 h-5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
                           </svg>
                         </Tooltip>
                       ) : null
                     }
                   </div>
                 </th>
-              )
-            })
-          }
-        </tr>
-      </thead>
-      <tbody>
-        {
-          values.map(row => {
-            return (
+              ))
+            }
+          </tr>
+        </thead>
+        <tbody>
+          {
+            values.map(row => (
               <tr key={row.denom}>
-                <td className="pt-4 min-w-8r md:min-w-full">
+                <td className="flex justify-start lg:justify-center pt-4">
                   <Tooltip content={supportedChains[params.get('selected') ?? 'carbon'][row.denom]?.name}>
-                    {
-                      getIcon(row) ? <img
-                        src={`${getIcon(row)}`}
-                        alt='Coin image'
-                        width={45}
-                        height={45}
-                      /> : null
-                    }
+                    <img
+                      src={`${getIcon(row, data.currentChain?.name?.toLowerCase())}`}
+                      alt='Coin image'
+                      width={45}
+                      height={45}
+                    />
                   </Tooltip>
                 </td>
-                <td className='text-left pt-4 min-w-8r md:min-w-full'>{(parseInt(row.total_tokens) / 1_000_000).toLocaleString('en-US')}</td>
-                <td className='text-left pt-4 min-w-8r md:min-w-full'>${getLsdUsdValue(row).toLocaleString('en-US', {
-                  maximumFractionDigits: 2
-                })}</td>
-                <td className='text-right pt-4 min-w-8r md:min-w-full'>{(getTakeRate(row) * 100).toLocaleString('en-US')}%</td>
-                <td className='text-right pt-4 min-w-8r md:min-w-full'>{(parseFloat(row.reward_weight) * 100).toLocaleString('en-US')}%</td>
-                <td className='text-right pt-4 min-w-8r md:min-w-full'>{getAdditionalYield(row)}%</td>
+                <td className='text-left lg:text-right pt-4'>{toLocaleString((parseInt(row.total_tokens) / 1_000_000))}</td>
+                <td className='text-left lg:text-right pt-4'>${toLocaleString(getLsdUsdValue(row, data.currentChain?.name?.toLowerCase(), usdValues))}</td>
+                <td className='text-left lg:text-right pt-4'>{toLocaleString((getTakeRate(row, data.chainParams?.take_rate_claim_interval) * 100))}%</td>
+                <td className='text-left lg:text-right pt-4'>{toLocaleString((parseFloat(row.reward_weight) * 100))}%</td>
+                <td className='text-left lg:text-right pt-4'>{toLocaleString(getAdditionalYield(row, data.totalSupply?.amount, data.currentChain?.name?.toLowerCase(), data.currentChain?.inflation, totalRewardWeight, data.chainParams?.take_rate_claim_interval, usdValues))}%</td>
               </tr>
-            )
-          })
-        }
-      </tbody>
-    </table> : <div>
-      <p className="p-3 text-center font-bold font-inter">This chain has not whitelisted any Alliance assets yet</p>
-    </div>
+            ))
+          }
+        </tbody>
+      </table>
+    </LoadingComponent>
   );
 }
