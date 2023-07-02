@@ -1,7 +1,7 @@
 "use client";
 
 import { Alliance, AllianceParams, TotalSupply } from "@/types/ResponseTypes";
-import { supportedChains, supportedTokens } from "@/const/Variables";
+import { headers, supportedChains, supportedTokens } from "@/const/Variables";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import { Tooltip } from "@nextui-org/react";
@@ -21,7 +21,6 @@ export default function Table({
   totalSupply: TotalSupply,
   currentChain: any
 }) {
-  const headers = ["Name", "Total Staked", "Total Value Staked", "Take Rate", "Reward Weight", "Additional Yield"];
   const params = useSearchParams();
   const totalRewardWeight = useMemo<number>(() => {
     let total = 0;
@@ -69,7 +68,8 @@ export default function Table({
 
   const getAdditionalYield = (row: Alliance) => {
     const usdStaked = getLsdUsdValue(row);
-    return (100* (annualRewardsToLunaStakers(row) - lsdLosePerYear(row)) / usdStaked).toLocaleString('en-US');
+    const percentage = currentChain.name === 'Carbon' ? 1 : 100;
+    return (percentage * (annualRewardsToLunaStakers(row) - lsdLosePerYear(row)) / usdStaked).toLocaleString('en-US');
   }
 
   return (
@@ -79,7 +79,20 @@ export default function Table({
           {
             headers.map((v, i) => {
               return (
-                <th key={v} className={`small ${i < 3 ? 'text-left' : 'text-right'} min-w-8r md:min-w-full`}>{v}</th>
+                <th key={v.title} className={`small min-w-8r md:min-w-full`}>
+                  <div className={`${i < 3 ? 'justify-start' : 'justify-end'} flex items-center gap-1`}>
+                    {v.title}
+                    {
+                      v.tooltip ? (
+                        <Tooltip content={v.tooltip}>
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black" className="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                          </svg>
+                        </Tooltip>
+                      ) : null
+                    }
+                  </div>
+                </th>
               )
             })
           }

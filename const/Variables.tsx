@@ -87,3 +87,20 @@ export const supportedChains: any = {
     icon: 'https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Terra.svg'
   }
 };
+
+export const headers = [{
+  title: "Name"
+}, {
+  title: "Total Staked"
+}, {
+  title: "Total Value Staked"
+}, {
+  title: "Take Rate",
+  tooltip: "A tax that redistributes a percentage of the Alliance asset to all stakers on this chain."
+}, {
+  title: "Reward Weight",
+  tooltip: "The proportion of total staking rewards on this chain to be directed to stakers of this asset."
+}, {
+  title: "Additional Yield",
+  tooltip: "A second yield in the form of the chain's native token."
+}];
