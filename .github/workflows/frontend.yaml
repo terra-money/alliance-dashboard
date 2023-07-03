@@ -1,0 +1,38 @@
+name: frontend
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    name: Publish to Cloudflare Pages
+    steps:
+      - name: Checkouts
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: .
+
+      - name: Build source code.
+        run: npm run build
+        working-directory: .
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_PAGES_TOKEN }}
+          accountId: 620ff29bbd515d2848f5306578bd1d1d
+          projectName: alliance-dashboard
+          directory: out
+          gitHubToken: ${{ secrets.TFL_GITHUB_TOKEN }}
