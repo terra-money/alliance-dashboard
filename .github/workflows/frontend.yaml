@@ -34,5 +34,5 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_PAGES_TOKEN }}
           accountId: 620ff29bbd515d2848f5306578bd1d1d
           projectName: alliance-dashboard
-          directory: .next
+          directory: out
           gitHubToken: ${{ secrets.TFL_GITHUB_TOKEN }}
