@@ -47,7 +47,7 @@ export default function Home() {
       <h1 className="head_text">
         <span className='terra_gradient'>Explore Alliance</span>
       </h1>
-      <span className="font-bold">Powered by Big labs</span>
+      <span className="font-bold">Built by Big labs</span>
       <div className="info_text_bold mt-8">
         <h3 >
           Alliance allows blockchains to trade yield with each other.
