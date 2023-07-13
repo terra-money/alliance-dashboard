@@ -5,7 +5,7 @@ export default function Pill({ pill, data }: { pill: Pill, data?: any }) {
   const percentage = parseFloat(data?.change24h ?? '0');
 
   return (
-    <div className="flex min-w-1/2 md:min-w-1/4 custom_card gap-3">
+    <div className="flex custom_card gap-3">
       <div className='flex items-center'>
         <Tooltip content={pill.name}>
           <img

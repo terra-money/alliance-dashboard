@@ -32,7 +32,6 @@ export default function Graph({ values }: { values: Alliance[] }) {
     values?.map((val) => {
       const intTokens = parseInt(val.total_tokens);
       supply += intTokens;
-      console.log(val.denom);
       map.set(supportedChains[chain].alliance_coins[val.denom].name, intTokens);
       curColors.push(supportedChains[chain].alliance_coins[val.denom].color);
     });

@@ -21,7 +21,6 @@ export const QueryForAlliances: AllianceQuery = async (chain: Chain): Promise<Al
     }
     resp.alliances = resp.alliances.filter((a) => a.denom !== allianceHubDenom);
   }
-  console.log("ALLIANCE", resp);
   return resp;
 };
 

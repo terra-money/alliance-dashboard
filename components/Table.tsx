@@ -13,7 +13,6 @@ export default function Table({ values, usdValues }: { values: Alliance[]; usdVa
   const totalRewardWeight = useMemo<number>(() => {
     let total = 0;
 
-    console.log(values);
     values.forEach((v) => {
       total += parseFloat(v.reward_weight);
     });

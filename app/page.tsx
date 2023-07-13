@@ -64,7 +64,7 @@ export default function Home() {
       </div>
       <div className="flex flex-col pt-3 pb-3 mt-12 overflow-auto">
         <LoadingComponent isLoading={loading} values={usdValues}>
-          <div className="flex gap-3">{usdValues && pills.map((pill) => <Pill key={pill.id} pill={pill} data={usdValues[pill.token]} />)}</div>
+          <div className="gap-3">{usdValues && pills.map((pill) => <Pill key={pill.id} pill={pill} data={usdValues[pill.token]} />)}</div>
         </LoadingComponent>
       </div>
       <div className="flex w-full flex-col lg:flex-row gap-3">
