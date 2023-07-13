@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
 import Card from "@/components/Card";
 import Graph from "@/components/Graph";
 import LoadingComponent from "@/components/LoadingComponent";
 import Pill from "@/components/Pill";
 import Table from "@/components/Table";
-import { pills, supportedChains } from "@/const/Variables";
+import { MOCK_PRICES, pills, supportedChains } from "@/const/Variables";
+import { QueryForAlliances } from "@/lib/AllianceQuery";
 import { Alliance, AllianceResponse } from "@/types/ResponseTypes";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -18,21 +19,23 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    ; (async () => {
+    (async () => {
       if (!usdValues) {
         setLoading(true);
-        const result = await fetch('https://price.api.tfm.com/tokens/?limit=1500');
+        const result = await fetch("https://price.api.tfm.com/tokens/?limit=1500");
         const json = await result.json();
-        setUsdValues(json);
+        setUsdValues({
+          ...json,
+          ...MOCK_PRICES,
+        });
         setLoading(false);
       }
 
-      const chain = supportedChains[params.get('selected') ?? 'carbon'];
+      const chain = supportedChains[params.get("selected") ?? "carbon"];
       let response = [];
 
       try {
-        const chainResponse = await fetch(`${chain.lcd}/terra/alliances?pagination.limit=100`);
-        const resp = await chainResponse.json() as AllianceResponse;
+        const resp = await QueryForAlliances(chain);
         response = [...resp.alliances];
       } catch {
         response = [...[]];
@@ -43,30 +46,25 @@ export default function Home() {
   }, [params]);
 
   return (
-    <section className='w-full flex-col'>
+    <section className="w-full flex-col">
       <h1 className="head_text">
-        <span className='terra_gradient'>Explore Alliance</span>
+        <span className="terra_gradient">Explore Alliance</span>
       </h1>
       <span className="font-bold">Built by Big labs</span>
       <div className="info_text_bold mt-8">
-        <h3 >
-          Alliance allows blockchains to trade yield with each other.
-        </h3>
+        <h3>Alliance allows blockchains to trade yield with each other.</h3>
       </div>
       <div className="info_text mt-2">
         <h3>
-          Learn more about Alliance <Link href='https://alliance.terra.money/'><u>here</u></Link>
+          Learn more about Alliance{" "}
+          <Link href="https://alliance.terra.money/">
+            <u>here</u>
+          </Link>
         </h3>
       </div>
       <div className="flex flex-col pt-3 pb-3 mt-12 overflow-auto">
         <LoadingComponent isLoading={loading} values={usdValues}>
-          <div className="flex gap-3">
-            {
-              usdValues && pills.map(pill => (
-                <Pill key={pill.id} pill={pill} data={usdValues[pill.token]} />
-              ))
-            }
-          </div>
+          <div className="flex gap-3">{usdValues && pills.map((pill) => <Pill key={pill.id} pill={pill} data={usdValues[pill.token]} />)}</div>
         </LoadingComponent>
       </div>
       <div className="flex w-full flex-col lg:flex-row gap-3">
@@ -82,5 +80,5 @@ export default function Home() {
         </div>
       </div>
     </section>
-  )
+  );
 }
