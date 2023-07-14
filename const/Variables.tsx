@@ -152,25 +152,25 @@ export const headers = [
 export const MOCK_PRICES = {
   "ibc/623CD0B9778AD974713317EA0438A0CCAA72AF0BBE7BEE002205BCA25F1CA3BA": {
     chain: "pisco-1",
-    address: "ibc/623CD0B9778AD974713317EA0438A0CCAA72AF0BBE7BEE002205BCA25F1CA3BA",
+    contract_addr: "ibc/623CD0B9778AD974713317EA0438A0CCAA72AF0BBE7BEE002205BCA25F1CA3BA",
     usd: 10.429760115,
     change24h: -0.6085513176296597,
   },
   "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/stDeck": {
     chain: "pisco-1",
-    address: "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/stDeck",
+    contract_addr: "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/stDeck",
     usd: 10.429760115,
     change24h: -0.6085513176296597,
   },
   "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/stOracle": {
     chain: "pisco-1",
-    address: "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/stOracle",
+    contract_addr: "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/stOracle",
     usd: 10.429760115,
     change24h: -0.6085513176296597,
   },
   "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/utest766e": {
     chain: "pisco-1",
-    address: "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/utest766e",
+    contract_addr: "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/utest766e",
     usd: 10.429760115,
     change24h: -0.6085513176296597,
   },
