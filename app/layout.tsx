@@ -6,10 +6,19 @@ export const metadata = {
   title: 'Alliance Analytics Dashboard',
   description: 'by Big labs',
   openGraph: {
-    type: 'website',
     title: 'Alliance Analytics Dashboard',
-    description: 'by Big labs',
+    description: 'Dashboard for Alliance Analytics',
+    url: 'https://alliance-dashboard-git-adding-opg-metadata-joshuabrigati.vercel.app/',
     siteName: 'Alliance Analytics Dashboard',
+    images: [
+      {
+        url: '/opengraph-image.png',
+        width: 800,
+        height: 600,
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
   },
 }
 
