@@ -30,7 +30,6 @@ export default function RootLayout({
         <meta property="og:description" content="Dashboard for Alliance" />
         <meta property="og:image" content="http://alliance-dashboard-git-adding-opg-metadata-joshuabrigati.vercel.app/assets/images/banner.png" />
 
-
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content="alliance-dashboard-git-adding-opg-metadata-joshuabrigati.vercel.app" />
         <meta property="twitter:url" content="https://alliance-dashboard-git-adding-opg-metadata-joshuabrigati.vercel.app/" />
