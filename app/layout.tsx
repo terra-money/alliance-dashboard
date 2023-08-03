@@ -8,7 +8,6 @@ export const metadata = {
   openGraph: {
     title: 'Alliance Analytics Dashboard',
     description: 'Dashboard for Alliance Analytics',
-    url: 'https://alliance-dashboard-git-adding-opg-metadata-joshuabrigati.vercel.app/',
     siteName: 'Alliance Analytics Dashboard',
     images: [
       {
