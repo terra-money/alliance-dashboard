@@ -11,7 +11,7 @@ export const metadata = {
     description: 'by Big labs',
     images: [
       {
-        url: '/public/assets/images/banner.png',
+        url: '/assets/images/banner.png',
         alt: 'Alliance Analytics Dashboard',
       },
     ],
