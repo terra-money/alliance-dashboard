@@ -12,7 +12,7 @@ export const metadata = {
     url: "https://alliance-dashboard.terra.money/",
     images: [
       {
-        url: 'https://alliance-dashboard.terra.money/opengraph-image.png',
+        url: 'http://alliance-dashboard.terra.money/opengraph-image.png',
         width: 800,
         height: 600,
       },
