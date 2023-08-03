@@ -21,8 +21,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta property="og:image" content='http://alliance-dashboard.vercel.app/assets/images/banner.png'  />
-        <meta property="og:image:secure_url" content='https://alliance-dashboard.vercel.app/assets/images/banner.png'  />
+        <meta property="og:image" content='http://alliance-dashboard-git-adding-opg-metadata-joshuabrigati.vercel.app/assets/images/banner.png'  />
+        <meta property="og:image:secure_url" content='https://alliance-dashboard-git-adding-opg-metadata-joshuabrigati.vercel.app/assets/images/banner.png'  />
+
+        <meta property="og:url" content="https://alliance-dashboard-git-adding-opg-metadata-joshuabrigati.vercel.app/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Alliance Analytics Dashboard" />
+        <meta property="og:description" content="Dashboard for Alliance" />
+        <meta property="og:image" content="http://alliance-dashboard-git-adding-opg-metadata-joshuabrigati.vercel.app/assets/images/banner.png" />
+
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="alliance-dashboard-git-adding-opg-metadata-joshuabrigati.vercel.app" />
+        <meta property="twitter:url" content="https://alliance-dashboard-git-adding-opg-metadata-joshuabrigati.vercel.app/" />
+        <meta name="twitter:title" content="Alliance Analytics Dashboard" />
+        <meta name="twitter:description" content="Dashboard for Alliance" />
+        <meta name="twitter:image" content="http://alliance-dashboard-git-adding-opg-metadata-joshuabrigati.vercel.app/assets/images/banner.png" />
       </head>
       <body>
         <main className='app'>
