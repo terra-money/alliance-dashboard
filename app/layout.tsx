@@ -13,6 +13,8 @@ export const metadata = {
       {
         url: '/assets/images/banner.png',
         alt: 'Alliance Analytics Dashboard',
+        width: 800,
+        height: 600,
         type: 'image/png',
       },
     ],
