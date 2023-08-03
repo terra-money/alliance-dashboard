@@ -3,8 +3,22 @@ import Nav from '@/components/Nav';
 import { Footer } from '@/components/Footer';
 
 export const metadata = {
-  title: 'Alliance Dashboard by Big labs',
+  title: 'Alliance Analytics Dashboard',
   description: 'by Big labs',
+  openGraph: {
+    title: 'Alliance Analytics Dashboard',
+    description: 'Dashboard for Alliance Analytics',
+    siteName: 'Alliance Analytics Dashboard',
+    images: [
+      {
+        url: '/opengraph-image.png',
+        width: 800,
+        height: 600,
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({
