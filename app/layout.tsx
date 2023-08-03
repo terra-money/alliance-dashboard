@@ -9,15 +9,6 @@ export const metadata = {
     type: 'website',
     title: 'Alliance Analytics Dashboard',
     description: 'by Big labs',
-    images: [
-      {
-        url: '/assets/images/banner.png',
-        alt: 'Alliance Analytics Dashboard',
-        width: 800,
-        height: 600,
-        type: 'image/png',
-      },
-    ],
     siteName: 'Alliance Analytics Dashboard',
   },
 }
@@ -29,6 +20,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta property="og:image" content='https://alliance-dashboard.vercel.app/assets/images/banner.png'  />
+      </head>
       <body>
         <main className='app'>
           <Nav />
