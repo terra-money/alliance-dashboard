@@ -21,7 +21,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta property="og:image" content='https://alliance-dashboard.vercel.app/assets/images/banner.png'  />
+        <meta property="og:image" content='http://alliance-dashboard.vercel.app/assets/images/banner.png'  />
+        <meta property="og:image:secure_url" content='https://alliance-dashboard.vercel.app/assets/images/banner.png'  />
       </head>
       <body>
         <main className='app'>
