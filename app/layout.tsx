@@ -1,13 +1,16 @@
+import { Metadata } from 'next'
 import '@/styles/globals.css';
 import Nav from '@/components/Nav';
 import { Footer } from '@/components/Footer';
+import { Suspense } from 'react';
+import CSSLoader from '@/components/CSSLoader';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Alliance Analytics Dashboard',
-  description: 'by Big labs',
+  description: 'The official analytics dashboard for tracking Alliance assets and yields.',
   openGraph: {
     title: 'Alliance Analytics Dashboard',
-    description: 'Dashboard for Alliance Analytics',
+    description: 'The official analytics dashboard for tracking Alliance assets and yields.',
     siteName: 'Alliance Analytics Dashboard',
     url: "https://alliance-dashboard.terra.money/",
     images: [
@@ -19,6 +22,15 @@ export const metadata = {
       },
     ],
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Alliance Analytics Dashboard',
+    description: 'The official analytics dashboard for tracking Alliance assets and yields.',
+    images: {
+      url: 'http://alliance-dashboard.terra.money/opengraph-image.png',
+      alt: 'Alliance Analytics Dashboard Background Image',
+    }
   },
 }
 
@@ -32,7 +44,9 @@ export default function RootLayout({
       <body>
         <main className='app'>
           <Nav />
-          {children}
+          <Suspense fallback={<CSSLoader />}>
+            {children}
+          </Suspense>
           <Footer />
         </main>
       </body>

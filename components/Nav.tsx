@@ -1,6 +1,8 @@
+import { Suspense } from 'react';
 import Link from "next/link";
 import Image from "next/image";
 import Dropdown from "./Dropdown";
+import CSSLoader from './CSSLoader';
 
 export default function Nav() {
   return (
@@ -16,7 +18,9 @@ export default function Nav() {
       </Link>
 
       <div className="flex gap-3 md:gap-5">
-        <Dropdown />
+        <Suspense fallback={<CSSLoader />}>
+          <Dropdown />
+        </Suspense>
       </div>
     </nav>
   )
