@@ -7,10 +7,10 @@ import CSSLoader from '@/components/CSSLoader';
 
 export const metadata: Metadata = {
   title: 'Alliance Analytics Dashboard',
-  description: 'by Big labs',
+  description: 'The official analytics dashboard for tracking Alliance assets and yields.',
   openGraph: {
     title: 'Alliance Analytics Dashboard',
-    description: 'Dashboard for Alliance Analytics',
+    description: 'The official analytics dashboard for tracking Alliance assets and yields.',
     siteName: 'Alliance Analytics Dashboard',
     url: "https://alliance-dashboard.terra.money/",
     images: [
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Alliance Analytics Dashboard',
-    description: 'Dashboard for Alliance Analytics',
+    description: 'The official analytics dashboard for tracking Alliance assets and yields.',
     images: {
       url: 'http://alliance-dashboard.terra.money/opengraph-image.png',
       alt: 'Alliance Analytics Dashboard Background Image',
