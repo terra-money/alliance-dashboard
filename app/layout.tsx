@@ -23,6 +23,15 @@ export const metadata: Metadata = {
     ],
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Alliance Analytics Dashboard',
+    description: 'Dashboard for Alliance Analytics',
+    images: {
+      url: 'http://alliance-dashboard.terra.money/opengraph-image.png',
+      alt: 'Alliance Analytics Dashboard Background Image',
+    }
+  },
 }
 export default function RootLayout({
   children,
