@@ -1,5 +1,6 @@
 'use client';
 
+import CSSLoader from '@/components/CSSLoader';
 import Card from "@/components/Card";
 import Graph from "@/components/Graph";
 import LoadingComponent from "@/components/LoadingComponent";
@@ -72,14 +73,14 @@ export default function Home() {
       <div className="flex w-full flex-col lg:flex-row gap-3">
         <div className="w-full lg:w-4/6">
           <Card name="Assets">
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<CSSLoader />}>
               <Table usdValues={usdValues} values={data} />
             </Suspense>
           </Card>
         </div>
         <div className="w-full lg:w-2/6">
           <Card name="Overview" className="flex flex-col items-center overflow-auto">
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<CSSLoader />}>
               <Graph values={data} />
             </Suspense>
           </Card>
