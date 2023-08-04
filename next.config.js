@@ -6,6 +6,7 @@ const nextConfig = {
       'gravedigger.backbonelabs.io',
       'www.erisprotocol.com',
       'raw.githubusercontent.com',
+      'alliance-dashboard.terra.money'
     ],
   },
 };
