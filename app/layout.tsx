@@ -6,16 +6,19 @@ export const metadata = {
   title: 'Alliance Analytics Dashboard',
   description: 'by Big labs',
   openGraph: {
-    type: 'website',
     title: 'Alliance Analytics Dashboard',
-    description: 'by Big labs',
+    description: 'Dashboard for Alliance Analytics',
+    siteName: 'Alliance Analytics Dashboard',
+    url: "https://alliance-dashboard.terra.money/",
     images: [
       {
-        url: '/assets/images/banner.png',
-        alt: 'Alliance Analytics Dashboard',
+        url: 'http://alliance-dashboard.terra.money/opengraph-image.png',
+        type: 'image/png',
+        width: 800,
+        height: 600,
       },
     ],
-    siteName: 'Alliance Analytics Dashboard',
+    type: 'website',
   },
 }
 
