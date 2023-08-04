@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import '@/styles/globals.css';
 import Nav from '@/components/Nav';
 import { Footer } from '@/components/Footer';
+import Head from 'next/head';
 
 export const metadata: Metadata = {
   title: 'Alliance Analytics Dashboard',
@@ -15,6 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Head>
+        <title>Alliance Analytics Dashboard</title>
+      </Head>
       <body>
         <main className='app'>
           <Nav />
