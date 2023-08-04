@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Alliance Analytics Dashboard',
-  description: 'by Big labs',
+  description: 'Testing again',
 }
 
 export default function RootLayout({

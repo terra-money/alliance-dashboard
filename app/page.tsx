@@ -9,7 +9,7 @@ import { pills, supportedChains } from "@/const/Variables";
 import { Alliance, AllianceResponse } from "@/types/ResponseTypes";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 export default function Home() {
   const [usdValues, setUsdValues] = useState<any>();
@@ -72,12 +72,16 @@ export default function Home() {
       <div className="flex w-full flex-col lg:flex-row gap-3">
         <div className="w-full lg:w-4/6">
           <Card name="Assets">
-            <Table usdValues={usdValues} values={data} />
+            <Suspense fallback={<div>Loading...</div>}>
+              <Table usdValues={usdValues} values={data} />
+            </Suspense>
           </Card>
         </div>
         <div className="w-full lg:w-2/6">
           <Card name="Overview" className="flex flex-col items-center overflow-auto">
-            <Graph values={data} />
+            <Suspense fallback={<div>Loading...</div>}>
+              <Graph values={data} />
+            </Suspense>
           </Card>
         </div>
       </div>
