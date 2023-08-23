@@ -123,7 +123,8 @@ export default function Table({ values, usdValues }: { values: Alliance[]; usdVa
                     data.currentChain?.inflation,
                     totalRewardWeight,
                     data.chainParams?.take_rate_claim_interval,
-                    usdValues
+                    usdValues,
+                    data.currentChain?.decimals
                   )
                 )}
                 %

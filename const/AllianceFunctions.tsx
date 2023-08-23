@@ -18,13 +18,13 @@ export const getLsdUsdValue = (row: Alliance, chain: string, usdValues: any): nu
   if (!tokenName) return 0;
 
   const value = usdValues[supportedTokens[tokenName]];
-  return ((value ? value.usd : 0) * parseInt(row.total_tokens)) / 1_000_000;
+  return ((value ? value.usd : 0) * parseInt(row.total_tokens)) / 1000_000;
 };
 
-const getNativeUsdValue = (totalSupplyAmount: string, chain: string, usdValues: any) => {
+const getNativeUsdValue = (totalSupplyAmount: string, chain: string, usdValues: any, decimals: number) => {
   const tokenName = supportedChains[chain]?.denom;
   const value = usdValues[supportedTokens[tokenName]];
-  return ((value ? value.usd : 0) * parseInt(totalSupplyAmount)) / 1_000_000;
+  return ((value ? value.usd : 0) * parseInt(totalSupplyAmount)) / 10 ** decimals;
 };
 
 const lsdLosePerYear = (row: Alliance, chain: string, takeRate: string, usdValues: any) => {
@@ -42,9 +42,10 @@ const annualRewardsToLunaStakers = (
   chain: string,
   inflation: number,
   totalRewardWeight: number,
-  usdValues: any
+  usdValues: any,
+  decimals: number
 ) => {
-  const usdNative = getNativeUsdValue(totalSupplyAmount, chain, usdValues);
+  const usdNative = getNativeUsdValue(totalSupplyAmount, chain, usdValues, decimals);
   return usdNative * inflation * (parseFloat(row.reward_weight) / (1 + totalRewardWeight));
 };
 
@@ -55,13 +56,13 @@ export const getAdditionalYield = (
   inflation: number,
   totalRewardWeight: number,
   takeRate: string,
-  usdValues: any
+  usdValues: any,
+  decimals: number
 ) => {
   const usdStaked = getLsdUsdValue(row, chain, usdValues);
-  const percentage = chain === "carbon" ? 1 : 100; // todo remove this when endpoint is fixed
   return (
-    (percentage *
-      (annualRewardsToLunaStakers(row, totalSupplyAmount, chain, inflation, totalRewardWeight, usdValues) -
+    (100 *
+      (annualRewardsToLunaStakers(row, totalSupplyAmount, chain, inflation, totalRewardWeight, usdValues, decimals) -
         lsdLosePerYear(row, chain, takeRate, usdValues))) /
     usdStaked
   );

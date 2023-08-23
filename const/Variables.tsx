@@ -35,18 +35,18 @@ export const supportedTokens: any = {
   uwhale: "ibc/EDD6F0D66BCD49C1084FB2C35353B4ACD7B9191117CE63671B61320548F7C89D",
   kuji: "ibc/BB6BCDB515050BAE97516111873CCD7BCF1FD0CCB723CC12F3C4F704D6C646CE",
   uluna: "uluna",
-  stDeck: "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/stDeck",
-  stOracle: "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/stOracle",
-  stTest: "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/utest766e",
-  something: "ibc/623CD0B9778AD974713317EA0438A0CCAA72AF0BBE7BEE002205BCA25F1CA3BA",
+  rswth: "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098",
+  ampWhale: "ibc/B3F639855EE7478750CC8F82072307ED6E131A8EFF20345E1D136B50C4E5EC36",
+  bWhale: "ibc/517E13F14A1245D4DE8CF467ADD4DA0058974CDCC880FA6AE536DBCA1D16D84E",
 };
 
 export const supportedChains: { [key: string]: Chain } = {
   carbon: {
     name: "Carbon",
     lcd: "https://query-api.carbon.network",
-    inflation: 0.04,
+    inflation: 0.0746,
     denom: "swth",
+    decimals: 8,
     icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Carbon.svg",
     alliance_coins: {
       "ibc/62A3870B9804FC3A92EAAA1F0F3F07E089DBF76CC521466CA33F5AAA8AD42290": {
@@ -66,6 +66,7 @@ export const supportedChains: { [key: string]: Chain } = {
     lcd: "https://kujira-api.polkachu.com",
     denom: "kuji",
     inflation: 0,
+    decimals: 6,
     icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Kujira.png",
     alliance_coins: {},
   },
@@ -73,6 +74,7 @@ export const supportedChains: { [key: string]: Chain } = {
     name: "Migaloo",
     lcd: "https://ww-migaloo-rest.polkachu.com",
     inflation: 0.08,
+    decimals: 6,
     denom: "uwhale",
     icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Migaloo.svg",
     alliance_coins: {
@@ -90,35 +92,31 @@ export const supportedChains: { [key: string]: Chain } = {
   },
   terra: {
     name: "Terra",
-    lcd: "https://pisco-lcd.terra.dev",
+    lcd: "https://phoenix-lcd.terra.dev",
     inflation: 0.07,
+    decimals: 6,
     denom: "uluna",
     icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Terra.svg",
     alliance_coins: {
-      "factory/terra1majrm6e6n0eg760n9fs4g5jvwzh4ytp8e2d99mfgzv2e7mjmdwxse0ty73/ualliance": {
+      "factory/terra1jwyzzsaag4t0evnuukc35ysyrx9arzdde2kg9cld28alhjurtthq0prs2s/ualliance": {
         name: "AllianceHub",
         icon: "",
         color: "",
-        hub_contract: "terra1majrm6e6n0eg760n9fs4g5jvwzh4ytp8e2d99mfgzv2e7mjmdwxse0ty73",
+        hub_contract: "terra1jwyzzsaag4t0evnuukc35ysyrx9arzdde2kg9cld28alhjurtthq0prs2s",
       },
-      "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/stDeck": {
-        name: "stDeck",
-        icon: "https://5624b9c2.station-assets.pages.dev/img/coins/AllianceDeck.png",
-        color: "#ff7500",
-      },
-      "ibc/623CD0B9778AD974713317EA0438A0CCAA72AF0BBE7BEE002205BCA25F1CA3BA": {
-        name: "something",
-        icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/ampLuna.svg",
+      "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098": {
+        name: "rswth",
+        icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/rSWTH.svg",
         color: "#324ab2",
       },
-      "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/stOracle": {
-        name: "stOracle",
-        icon: "https://5624b9c2.station-assets.pages.dev/img/coins/AllianceOracle.png",
+      "ibc/B3F639855EE7478750CC8F82072307ED6E131A8EFF20345E1D136B50C4E5EC36": {
+        name: "ampWhale",
+        icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/ampWHALE.svg",
         color: "#324ab2",
       },
-      "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/utest766e": {
-        name: "stTest",
-        icon: "https://5624b9c2.station-assets.pages.dev/img/coins/axlETH.svg",
+      "ibc/517E13F14A1245D4DE8CF467ADD4DA0058974CDCC880FA6AE536DBCA1D16D84E": {
+        name: "bWhale",
+        icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/bWHALE.png",
         color: "#fb0174",
       },
     },
@@ -150,28 +148,10 @@ export const headers = [
 ];
 
 export const MOCK_PRICES = {
-  "ibc/623CD0B9778AD974713317EA0438A0CCAA72AF0BBE7BEE002205BCA25F1CA3BA": {
-    chain: "pisco-1",
-    contract_addr: "ibc/623CD0B9778AD974713317EA0438A0CCAA72AF0BBE7BEE002205BCA25F1CA3BA",
-    usd: 10.429760115,
-    change24h: -0.6085513176296597,
-  },
-  "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/stDeck": {
-    chain: "pisco-1",
-    contract_addr: "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/stDeck",
-    usd: 10.429760115,
-    change24h: -0.6085513176296597,
-  },
-  "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/stOracle": {
-    chain: "pisco-1",
-    contract_addr: "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/stOracle",
-    usd: 10.429760115,
-    change24h: -0.6085513176296597,
-  },
-  "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/utest766e": {
-    chain: "pisco-1",
-    contract_addr: "factory/terra1zdpgj8am5nqqvht927k3etljyl6a52kwqup0je/utest766e",
-    usd: 10.429760115,
-    change24h: -0.6085513176296597,
+  "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098": {
+    chain: "phoenix-1",
+    contract_addr: "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098",
+    usd: 0.004,
+    change24h: 0,
   },
 };

@@ -1,3 +1,4 @@
+import { supportedTokens } from "@/const/Variables";
 import { Alliance, AllianceHubRewardDistributionResponse, AllianceHubTotalStakedResponse, AllianceResponse, Chain } from "@/types/ResponseTypes";
 
 type AllianceQuery = (chain: Chain) => Promise<AllianceResponse>;
@@ -42,7 +43,11 @@ const QueryForAllianceHubAssets = async (lcd: string, allianceHubContract: strin
     if (+distribution.distribution <= 0) {
       continue;
     }
-    const totalStaked = totalStakedRes.data.find((res) => distribution.asset.native === res.asset.native)?.balance ?? "0";
+    let totalStaked = totalStakedRes.data.find((res) => distribution.asset.native === res.asset.native)?.balance ?? "0";
+    if (distribution.asset.native === supportedTokens["rswth"]) {
+      console.log(distribution.asset.native);
+      totalStaked = "" + +totalStaked / 100;
+    }
     const a: Alliance = {
       ...allianceHubAlliance,
       denom: distribution.asset.native,

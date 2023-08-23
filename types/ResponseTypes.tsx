@@ -56,6 +56,7 @@ export interface Chain {
   lcd: string;
   inflation: number;
   denom: string;
+  decimals: number;
   icon: string;
   alliance_coins: {
     [key: string]: {
