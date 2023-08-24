@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Doughnut } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, ChartOptions, ChartData, Tooltip, Legend, TooltipItem } from 'chart.js';
-import { useEffect, useState } from 'react';
-import { Alliance } from '@/types/ResponseTypes';
-import { supportedChains } from '@/const/Variables';
-import { useSearchParams } from 'next/navigation';
-import LoadingComponent from './LoadingComponent';
+import { Doughnut } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, ChartOptions, ChartData, Tooltip, Legend, TooltipItem } from "chart.js";
+import { useEffect, useState } from "react";
+import { Alliance } from "@/types/ResponseTypes";
+import { supportedChains } from "@/const/Variables";
+import { useSearchParams } from "next/navigation";
+import LoadingComponent from "./LoadingComponent";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -27,36 +27,38 @@ export default function Graph({ values }: { values: Alliance[] }) {
     const map = new Map<string, number>();
     let curColors = new Array<string>();
 
-    const chain = params.get('selected') ?? 'carbon';
+    const chain = params.get("selected") ?? "carbon";
 
-    values?.map(val => {
+    values?.map((val) => {
       const intTokens = parseInt(val.total_tokens);
       supply += intTokens;
-      map.set(supportedChains[chain][val.denom].name, intTokens);
-      curColors.push(supportedChains[chain][val.denom].color);
+      map.set(supportedChains[chain].alliance_coins[val.denom].name, intTokens);
+      curColors.push(supportedChains[chain].alliance_coins[val.denom].color);
     });
 
     setTotalSupply(supply);
     setValueByAsset(map);
     setColors(curColors);
-    
+
     setTimeout(() => setLoading(false), 500);
   }, [values]);
 
   const data: ChartData<"doughnut"> = {
     labels: Array.from(valueByAsset.keys()),
-    datasets: [{
-      label: 'Total Percentage',
-      data: Array.from(valueByAsset.values()),
-      hoverOffset: 4,
-      backgroundColor: colors
-    }]
+    datasets: [
+      {
+        label: "Total Percentage",
+        data: Array.from(valueByAsset.values()),
+        hoverOffset: 4,
+        backgroundColor: colors,
+      },
+    ],
   };
 
   const options: ChartOptions = {
     interaction: {
       intersect: false,
-      mode: 'index',
+      mode: "index",
     },
     plugins: {
       tooltip: {
@@ -64,15 +66,15 @@ export default function Graph({ values }: { values: Alliance[] }) {
         boxPadding: 10,
         padding: 15,
         callbacks: {
-          label: createLabel
-        }
-      }
-    }
-  }
+          label: createLabel,
+        },
+      },
+    },
+  };
 
   return (
     <LoadingComponent isLoading={loading} values={colors}>
       <Doughnut data={data} options={options} />
     </LoadingComponent>
-  )
+  );
 }
