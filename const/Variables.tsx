@@ -157,8 +157,8 @@ export const headers = [
     ),
   },
   {
-    title: "Additional Yield",
-    tooltip: () => "A second yield in the form of the chain's native token.",
+    title: "Additional APY",
+    tooltip: () => "A second annualized yield in the form of the chain's native token.",
   },
 ];
 
