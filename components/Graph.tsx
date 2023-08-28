@@ -4,7 +4,7 @@ import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, ChartOptions, ChartData, Tooltip, Legend, TooltipItem } from "chart.js";
 import { useEffect, useState } from "react";
 import { Alliance } from "@/types/ResponseTypes";
-import { supportedChains } from "@/const/Variables";
+import { defaultChain, supportedChains } from "@/const/Variables";
 import { useSearchParams } from "next/navigation";
 import LoadingComponent from "./LoadingComponent";
 
@@ -27,7 +27,7 @@ export default function Graph({ values }: { values: Alliance[] }) {
     const map = new Map<string, number>();
     let curColors = new Array<string>();
 
-    const chain = params.get("selected") ?? "carbon";
+    const chain = params.get("selected") ?? defaultChain;
 
     values?.map((val) => {
       const intTokens = parseInt(val.total_tokens);

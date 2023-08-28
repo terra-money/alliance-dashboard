@@ -44,8 +44,8 @@ const QueryForAllianceHubAssets = async (lcd: string, allianceHubContract: strin
       continue;
     }
     let totalStaked = totalStakedRes.data.find((res) => distribution.asset.native === res.asset.native)?.balance ?? "0";
-    if (distribution.asset.native === supportedTokens["rswth"]) {
-      console.log(distribution.asset.native);
+    if (distribution.asset.native === supportedTokens["rSWTH"]) {
+      // handle 8 decimals
       totalStaked = "" + +totalStaked / 100;
     }
     const a: Alliance = {

@@ -1,5 +1,7 @@
 import { Chain, Pill } from "@/types/ResponseTypes";
 
+export const defaultChain: string = "terra";
+
 export const pills: Pill[] = [
   {
     id: 4,
@@ -35,7 +37,7 @@ export const supportedTokens: any = {
   uwhale: "ibc/EDD6F0D66BCD49C1084FB2C35353B4ACD7B9191117CE63671B61320548F7C89D",
   kuji: "ibc/BB6BCDB515050BAE97516111873CCD7BCF1FD0CCB723CC12F3C4F704D6C646CE",
   uluna: "uluna",
-  rswth: "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098",
+  rSWTH: "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098",
   ampWhale: "ibc/B3F639855EE7478750CC8F82072307ED6E131A8EFF20345E1D136B50C4E5EC36",
   bWhale: "ibc/517E13F14A1245D4DE8CF467ADD4DA0058974CDCC880FA6AE536DBCA1D16D84E",
 };
@@ -105,7 +107,7 @@ export const supportedChains: { [key: string]: Chain } = {
         hub_contract: "terra1jwyzzsaag4t0evnuukc35ysyrx9arzdde2kg9cld28alhjurtthq0prs2s",
       },
       "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098": {
-        name: "rswth",
+        name: "rSWTH",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/rSWTH.svg",
         color: "#324ab2",
       },
@@ -125,7 +127,7 @@ export const supportedChains: { [key: string]: Chain } = {
 
 export const headers = [
   {
-    title: "Name",
+    title: "Symbol",
   },
   {
     title: "Total Staked",
@@ -135,15 +137,28 @@ export const headers = [
   },
   {
     title: "Take Rate",
-    tooltip: "A tax that redistributes a percentage of the Alliance asset to all stakers on this chain.",
+    tooltip: () => "A tax that redistributes a percentage of the Alliance asset to all stakers on this chain.",
   },
   {
     title: "Reward Weight",
-    tooltip: "The proportion of total staking rewards on this chain to be directed to stakers of this asset.",
+    tooltip: (chain: string | null) => (
+      <>
+        <p>The proportion of total staking rewards on this chain to be directed to stakers of this asset.</p>
+        {chain == "terra" && (
+          <p>
+            On Terra, based on the{" "}
+            <a target="_blank" style={{ textDecoration: "underline" }} href="https://agora.terra.money/discussion/12477-alliance-followon-proposal">
+              Alliance Signalling Governance proposal
+            </a>
+            , rewards are uniformly distributed to each LST for a given chain, regardless of LST staked.
+          </p>
+        )}
+      </>
+    ),
   },
   {
     title: "Additional Yield",
-    tooltip: "A second yield in the form of the chain's native token.",
+    tooltip: () => "A second yield in the form of the chain's native token.",
   },
 ];
 
