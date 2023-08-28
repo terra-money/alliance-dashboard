@@ -127,7 +127,7 @@ export const supportedChains: { [key: string]: Chain } = {
 
 export const headers = [
   {
-    title: "Name",
+    title: "Symbol",
   },
   {
     title: "Total Staked",

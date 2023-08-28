@@ -80,6 +80,7 @@ export default function Table({ values, usdValues }: { values: Alliance[]; usdVa
       <table className="w-full h-full border-collapse mb-3">
         <thead>
           <tr className="table_row">
+            <th></th>
             {headers.map((v) => (
               <th key={v.title} className="small min-w-8r md:min-w-full">
                 <div className="justify-start lg:justify-center flex items-center gap-1">
@@ -107,6 +108,9 @@ export default function Table({ values, usdValues }: { values: Alliance[]; usdVa
                 <Tooltip content={supportedChains[params.get("selected") ?? defaultChain].alliance_coins[row.denom]?.name}>
                   <img src={`${getIcon(row, data.currentChain?.name?.toLowerCase())}`} alt="Coin image" width={45} height={45} />
                 </Tooltip>
+              </td>
+              <td className="text-center lg:text-center pt-4">
+                {supportedChains[params.get("selected") ?? defaultChain].alliance_coins[row.denom]?.name}
               </td>
               <td className="text-center lg:text-center pt-4">{toLocaleString(parseInt(row.total_tokens) / 1_000_000)}</td>
               <td className="text-center lg:text-center pt-4">
