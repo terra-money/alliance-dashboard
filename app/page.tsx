@@ -6,7 +6,7 @@ import Graph from "@/components/Graph";
 import LoadingComponent from "@/components/LoadingComponent";
 import Pill from "@/components/Pill";
 import Table from "@/components/Table";
-import { MOCK_PRICES, pills, supportedChains } from "@/const/Variables";
+import { MOCK_PRICES, defaultChain, pills, supportedChains } from "@/const/Variables";
 import { QueryForAlliances } from "@/lib/AllianceQuery";
 import { Alliance, AllianceResponse } from "@/types/ResponseTypes";
 import Link from "next/link";
@@ -32,7 +32,7 @@ export default function Home() {
         setLoading(false);
       }
 
-      const chain = supportedChains[params.get("selected") ?? "carbon"];
+      const chain = supportedChains[params.get("selected") ?? defaultChain];
       let response = [];
 
       try {

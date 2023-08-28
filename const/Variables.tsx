@@ -1,5 +1,7 @@
 import { Chain, Pill } from "@/types/ResponseTypes";
 
+export const defaultChain: string = "terra";
+
 export const pills: Pill[] = [
   {
     id: 4,

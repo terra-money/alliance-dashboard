@@ -1,7 +1,7 @@
 "use client";
 
 import { Alliance, AllianceParams, AllianceParamsResponse, TotalSupply, TotalSupplyAmount } from "@/types/ResponseTypes";
-import { headers, supportedChains } from "@/const/Variables";
+import { defaultChain, headers, supportedChains } from "@/const/Variables";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Tooltip } from "@nextui-org/react";
@@ -42,7 +42,7 @@ export default function Table({ values, usdValues }: { values: Alliance[]; usdVa
       setLoading(true);
 
       if (values.length > 0) {
-        const chain = supportedChains[params.get("selected") ?? "carbon"];
+        const chain = supportedChains[params.get("selected") ?? defaultChain];
 
         try {
           const chainParams = await fetch(`${chain.lcd}/terra/alliances/params`);
@@ -104,7 +104,7 @@ export default function Table({ values, usdValues }: { values: Alliance[]; usdVa
           {values.map((row) => (
             <tr key={row.denom}>
               <td className="flex justify-start lg:justify-center pt-4">
-                <Tooltip content={supportedChains[params.get("selected") ?? "carbon"].alliance_coins[row.denom]?.name}>
+                <Tooltip content={supportedChains[params.get("selected") ?? defaultChain].alliance_coins[row.denom]?.name}>
                   <img src={`${getIcon(row, data.currentChain?.name?.toLowerCase())}`} alt="Coin image" width={45} height={45} />
                 </Tooltip>
               </td>
