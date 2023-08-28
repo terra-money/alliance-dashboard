@@ -86,7 +86,7 @@ export default function Table({ values, usdValues }: { values: Alliance[]; usdVa
                 <div className="justify-start lg:justify-center flex items-center gap-1">
                   {v.title}
                   {v.tooltip ? (
-                    <Tooltip content={v.tooltip(params.get("selected"))}>
+                    <Tooltip content={v.tooltip(params.get("selected") ?? defaultChain)}>
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="w-5 h-5">
                         <path
                           strokeLinecap="round"
