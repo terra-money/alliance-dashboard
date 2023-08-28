@@ -135,15 +135,28 @@ export const headers = [
   },
   {
     title: "Take Rate",
-    tooltip: "A tax that redistributes a percentage of the Alliance asset to all stakers on this chain.",
+    tooltip: () => "A tax that redistributes a percentage of the Alliance asset to all stakers on this chain.",
   },
   {
     title: "Reward Weight",
-    tooltip: "The proportion of total staking rewards on this chain to be directed to stakers of this asset.",
+    tooltip: (chain: string | null) => (
+      <>
+        <p>The proportion of total staking rewards on this chain to be directed to stakers of this asset.</p>
+        {chain == "terra" && (
+          <p>
+            On Terra, based on the{" "}
+            <a target="_blank" style={{ textDecoration: "underline" }} href="https://agora.terra.money/discussion/12477-alliance-followon-proposal">
+              Alliance Signalling Governance proposal
+            </a>
+            , rewards are uniformly distributed to each LST for a given chain, regardless of LST staked.
+          </p>
+        )}
+      </>
+    ),
   },
   {
     title: "Additional Yield",
-    tooltip: "A second yield in the form of the chain's native token.",
+    tooltip: () => "A second yield in the form of the chain's native token.",
   },
 ];
 

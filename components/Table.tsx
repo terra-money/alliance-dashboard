@@ -85,7 +85,7 @@ export default function Table({ values, usdValues }: { values: Alliance[]; usdVa
                 <div className="justify-start lg:justify-center flex items-center gap-1">
                   {v.title}
                   {v.tooltip ? (
-                    <Tooltip content={v.tooltip}>
+                    <Tooltip content={v.tooltip(params.get("selected"))}>
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="w-5 h-5">
                         <path
                           strokeLinecap="round"
@@ -108,13 +108,15 @@ export default function Table({ values, usdValues }: { values: Alliance[]; usdVa
                   <img src={`${getIcon(row, data.currentChain?.name?.toLowerCase())}`} alt="Coin image" width={45} height={45} />
                 </Tooltip>
               </td>
-              <td className="text-left lg:text-right pt-4">{toLocaleString(parseInt(row.total_tokens) / 1_000_000)}</td>
-              <td className="text-left lg:text-right pt-4">
+              <td className="text-center lg:text-center pt-4">{toLocaleString(parseInt(row.total_tokens) / 1_000_000)}</td>
+              <td className="text-center lg:text-center pt-4">
                 ${toLocaleString(getLsdUsdValue(row, data.currentChain?.name?.toLowerCase(), usdValues))}
               </td>
-              <td className="text-left lg:text-right pt-4">{toLocaleString(getTakeRate(row, data.chainParams?.take_rate_claim_interval) * 100)}%</td>
-              <td className="text-left lg:text-right pt-4">{toLocaleString(parseFloat(row.reward_weight) * 100)}%</td>
-              <td className="text-left lg:text-right pt-4">
+              <td className="text-center lg:text-center pt-4">
+                {toLocaleString(getTakeRate(row, data.chainParams?.take_rate_claim_interval) * 100)}%
+              </td>
+              <td className="text-center lg:text-center pt-4">{toLocaleString(parseFloat(row.reward_weight) * 100)}%</td>
+              <td className="text-center lg:text-center pt-4">
                 {toLocaleString(
                   getAdditionalYield(
                     row,

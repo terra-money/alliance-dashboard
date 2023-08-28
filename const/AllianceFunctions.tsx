@@ -70,7 +70,7 @@ export const getAdditionalYield = (
 
 export const toLocaleString = (val: number) => {
   return val.toLocaleString("en-US", {
-    maximumFractionDigits: 3,
-    minimumFractionDigits: 3,
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
   });
 };
