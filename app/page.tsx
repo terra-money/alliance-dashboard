@@ -15,13 +15,14 @@ import { Suspense, useEffect, useState } from "react";
 
 export default function Home() {
   const [usdValues, setUsdValues] = useState<any>();
+  const [pillPrices, setPillPrices] = useState<any>(null);
   const [data, setData] = useState<Alliance[]>([]);
   const params = useSearchParams();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
-      if (!usdValues) {
+      if (!usdValues || !pillPrices) {
         setLoading(true);
         const result = await fetch("https://price.api.tfm.com/tokens/?limit=1500");
         const json = await result.json();
@@ -29,6 +30,14 @@ export default function Home() {
           ...json,
           ...MOCK_PRICES,
         });
+
+        const priceResult = await fetch("https://pisco-price-server.terra.dev/latest");
+        const pillJson = await priceResult.json();
+        setPillPrices(Object.fromEntries(pillJson.prices.map((p:any) => {
+          return [p.denom, {
+            usd: p.price
+          }]
+        })))
         setLoading(false);
       }
 
@@ -72,8 +81,8 @@ export default function Home() {
         </h3>
       </div>
       <div className="flex flex-col pt-3 pb-3 mt-12 overflow-auto">
-        <LoadingComponent isLoading={loading} values={usdValues}>
-          <div className="flex gap-3">{usdValues && pills.map((pill) => <Pill key={pill.id} pill={pill} data={usdValues[pill.token]} />)}</div>
+        <LoadingComponent isLoading={loading} values={pillPrices}>
+          <div className="flex gap-3">{pillPrices && pills.map((pill) => <Pill key={pill.id} pill={pill} data={pillPrices[pill.token]} />)}</div>
         </LoadingComponent>
       </div>
       <div className="flex w-full flex-col lg:flex-row gap-3">

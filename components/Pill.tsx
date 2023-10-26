@@ -17,9 +17,11 @@ export default function Pill({ pill, data }: { pill: Pill, data?: any }) {
           />
         </Tooltip>
       </div>
-      <div className="flex flex-col w-full">
-        <h2>${parseFloat(data?.usd ?? '0').toLocaleString('en-US')}</h2>
-        <h3 className={`${percentage < 0 ? 'text-red-400' : 'text-green-500'}`}>
+      <div className="flex items-center w-full">
+        <h2>${parseFloat(data?.usd ?? '0').toLocaleString('en-US', {
+          minimumFractionDigits: 4
+        })}</h2>
+        {/* <h3 className={`${percentage < 0 ? 'text-red-400' : 'text-green-500'}`}>
           {
             percentage < 0 ? (
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-7 h-7">
@@ -32,7 +34,7 @@ export default function Pill({ pill, data }: { pill: Pill, data?: any }) {
             )
           }
           {percentage.toLocaleString('en-US')}%
-        </h3>
+        </h3> */}
       </div>
     </div>
   );
