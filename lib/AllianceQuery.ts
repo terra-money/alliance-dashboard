@@ -9,6 +9,7 @@ const TOTAL_STAKED_QUERY = "ewogICJ0b3RhbF9zdGFrZWRfYmFsYW5jZXMiOiB7fQp9";
 export const QueryForAlliances: AllianceQuery = async (chain: Chain): Promise<AllianceResponse> => {
   const chainResponse = await fetch(`${chain.lcd}/terra/alliances?pagination.limit=100`);
   const resp = (await chainResponse.json()) as AllianceResponse;
+  resp.alliances = resp.alliances.filter((a) => a.denom !== "factory/migaloo190qz7q5fu4079svf890h4h3f8u46ty6cxnlt78eh486k9qm995hquuv9kd/ualliance");
 
   if (chain.name === "Terra") {
     const allianceHubDenom = Object.keys(chain.alliance_coins).find((key: string) => chain.alliance_coins[key].hub_contract);
