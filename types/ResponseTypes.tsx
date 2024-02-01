@@ -1,49 +1,3 @@
-export interface Alliance {
-  denom: string;
-  is_initialized: boolean;
-  last_reward_change_item: string;
-  reward_change_interval: string;
-  reward_change_rate: string;
-  reward_start_time: string;
-  reward_weight: string;
-  reward_weight_range: {
-    max: string;
-    min: string;
-  };
-  take_rate: string;
-  total_tokens: string;
-  total_validator_shares: string;
-}
-
-export interface Pagination {
-  next_key: string;
-  total: string;
-}
-
-export interface AllianceResponse {
-  alliances: Alliance[];
-  pagination: Pagination;
-}
-
-export interface AllianceParamsResponse {
-  params: AllianceParams;
-}
-
-export interface AllianceParams {
-  reward_delay_time: string;
-  take_rate_claim_interval: string;
-  last_take_rate_claim_time: string;
-}
-
-export interface TotalSupplyAmount {
-  amount: TotalSupply;
-}
-
-export interface TotalSupply {
-  denom: string;
-  amount: string;
-}
-
 export interface Pill {
   id: number;
   name: string;
@@ -51,41 +5,55 @@ export interface Pill {
   token: string;
 }
 
-export interface Chain {
-  name: string;
-  lcd: string;
-  inflation: number;
-  denom: string;
-  decimals: number;
-  icon: string;
-  alliance_coins: {
-    [key: string]: {
-      name: string;
-      icon: string;
-      color: string;
-      hub_contract?: string;
-    };
-  };
+export class AllianceBalanceEntry {
+  asset: Asset;
+  distribution: number;
+
+  constructor(asset: Asset, distribution: string) {
+    this.asset = asset;
+    this.distribution = Number(distribution);
+  }
+
+  static fromAny(model: any): AllianceBalanceEntry {
+    let asset = model.asset;
+    let distribution = model.distribution;
+
+    return new AllianceBalanceEntry(
+      asset,
+      distribution
+    );
+  }
+
+  getDenom = () => {
+    return this.asset.native ?? this.asset.cw20 as string;
+  }
 }
 
 interface Asset {
-  native: string;
+  native?: string;
+  cw20?: string;
 }
 
-interface BalanceEntry {
+export class AllianceHubRewardDistr {
   asset: Asset;
-  balance: string;
-}
+  balance: number;
 
-interface DistributionEntry {
-  asset: Asset;
-  distribution: string;
-}
+  constructor(asset: Asset, balance: string) {
+    this.asset = asset;
+    this.balance = Number(balance);
+  }
 
-export interface AllianceHubTotalStakedResponse {
-  data: BalanceEntry[];
-}
+  static fromAny(model: any): AllianceHubRewardDistr {
+    let asset = model.asset;
+    let balance = model.balance;
 
-export interface AllianceHubRewardDistributionResponse {
-  data: DistributionEntry[];
+    return new AllianceHubRewardDistr(
+      asset,
+      balance
+    );
+  }
+  
+  getDenom = () => {
+    return this.asset.native ?? this.asset.cw20 as string;
+  }
 }

@@ -1,78 +1,78 @@
 "use client";
-
-import { Alliance, AllianceParams, AllianceParamsResponse, TotalSupply, TotalSupplyAmount } from "@/types/ResponseTypes";
 import { defaultChain, headers, supportedChains } from "@/const/Variables";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Tooltip } from "@nextui-org/react";
-import { getAdditionalYield, getIcon, getLsdUsdValue, getTakeRate, toLocaleString } from "@/const/AllianceFunctions";
+import { getAdditionalYield, getLsdUsdValue, getTakeRate, toLocaleString } from "@/const/AllianceFunctions";
 import LoadingComponent from "./LoadingComponent";
+import { AllianceAsset, AllianceParams } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI";
+import { Coin, Dec } from "@terra-money/feather.js";
+import { Chain } from "@/types/Chain";
+import { LCD } from "@/const/LCDConfig";
+import { TableIcon } from "@/components/TableIcon";
 
-export default function Table({ values, usdValues }: { values: Alliance[]; usdValues: any }) {
+interface TableState {
+  currentChain: Chain;
+  chainParams: AllianceParams | undefined;
+  totalSupply: Coin | undefined;
+  inflation: Dec;
+}
+interface TableProps {
+  values: AllianceAsset[] | undefined;
+  usdValues: any
+}
+
+export default function Table({ values, usdValues }: TableProps) {
   const params = useSearchParams();
-  const totalRewardWeight = useMemo<number>(() => {
-    let total = 0;
-
-    values.forEach((v) => {
-      total += parseFloat(v.reward_weight);
-    });
-
-    return total;
-  }, [values]);
-  const [data, setData] = useState<{
-    chainParams: AllianceParams;
-    totalSupply: TotalSupply;
-    currentChain: any;
-  }>({
-    chainParams: {
-      last_take_rate_claim_time: "",
-      reward_delay_time: "",
-      take_rate_claim_interval: "",
-    },
-    totalSupply: {
-      amount: "",
-      denom: "",
-    },
-    currentChain: {},
-  });
   const [loading, setLoading] = useState(true);
+  const [totalRewardWeight, setTotalRewardWeight] = useState(0);
+  const [tableData, setTableData] = useState<TableState>({
+    chainParams: undefined,
+    totalSupply: undefined,
+    inflation: new Dec(0),
+    currentChain: supportedChains[defaultChain],
+  });
 
   useEffect(() => {
-    (async () => {
-      setLoading(true);
+    if (values !== undefined) {
+      let _totalRewardWeight = values?.reduce((curr, prevBalance) => {
+        return curr + parseFloat(prevBalance.reward_weight);
+      }, 0);
+      setTotalRewardWeight(_totalRewardWeight);
 
-      if (values.length > 0) {
-        const chain = supportedChains[params.get("selected") ?? defaultChain];
+      (async () => {
+        setLoading(true);
+        // Set the default chain and check if the user has selected a chain
+        // if the selected chain is available in the supported chains, use that
+        // otherwise keep using the default chain.
+        let chain = supportedChains[defaultChain];
+        const selectedParam = params.get("selected");
+        if (selectedParam !== null) {
+          let _chain = supportedChains[selectedParam];
+          if (_chain !== undefined) {
+            chain = _chain;
+          }
+        }
+        // Query the data on paralel to speed up the loading time
+        const res = await Promise.all([
+          LCD.alliance.params(chain.id),
+          LCD.bank.supplyByDenom(chain.id, chain.bondDenom),
+          LCD.mint.inflation(chain.id),
+        ]).catch((e) => { console.error(e) });
 
-        try {
-          const chainParams = await fetch(`${chain.lcd}/terra/alliances/params`);
-          const params = (await chainParams.json()) as AllianceParamsResponse;
-          const totalSupply = await fetch(`${chain.lcd}/cosmos/bank/v1beta1/supply/by_denom?denom=${chain.denom}`);
-          const supply = (await totalSupply.json()) as TotalSupplyAmount;
-
-          setData({
-            chainParams: params.params,
-            totalSupply: supply.amount,
+        // If no error occured, set the data
+        // otherwise, keep the default data
+        if (res != undefined) {
+          setTableData({
             currentChain: chain,
-          });
-        } catch (error) {
-          setData({
-            chainParams: {
-              last_take_rate_claim_time: "",
-              reward_delay_time: "",
-              take_rate_claim_interval: "",
-            },
-            totalSupply: {
-              amount: "",
-              denom: "",
-            },
-            currentChain: chain,
+            chainParams: res[0].params,
+            totalSupply: res[1],
+            inflation: res[2],
           });
         }
-      }
-
-      setLoading(false);
-    })();
+        setLoading(false);
+      })();
+    }
   }, [params, values]);
 
   return (
@@ -86,14 +86,8 @@ export default function Table({ values, usdValues }: { values: Alliance[]; usdVa
                 <div className="justify-start lg:justify-center flex items-center gap-1">
                   {v.title}
                   {v.tooltip ? (
-                    <Tooltip content={v.tooltip(params.get("selected") ?? defaultChain)}>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="w-5 h-5">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                        />
-                      </svg>
+                    <Tooltip content={v.tooltip(tableData.currentChain.id)}>
+                      <img src="/images/info.svg" alt="Info" width={20} height={20} />
                     </Tooltip>
                   ) : null}
                 </div>
@@ -102,35 +96,33 @@ export default function Table({ values, usdValues }: { values: Alliance[]; usdVa
           </tr>
         </thead>
         <tbody>
-          {values.map((row) => (
+          {values?.map((row) => (
             <tr key={row.denom}>
               <td className="flex justify-start lg:justify-center pt-4">
-                <Tooltip content={supportedChains[params.get("selected") ?? defaultChain].alliance_coins[row.denom]?.name}>
-                  <img src={`${getIcon(row, data.currentChain?.name?.toLowerCase())}`} alt="Coin image" width={45} height={45} />
-                </Tooltip>
+                <TableIcon row={row} chain={tableData.currentChain} />
               </td>
               <td className="text-center lg:text-center pt-4">
-                {supportedChains[params.get("selected") ?? defaultChain].alliance_coins[row.denom]?.name}
+                {tableData.currentChain.allianceCoins[row.denom]?.name}
               </td>
               <td className="text-center lg:text-center pt-4">{toLocaleString(parseInt(row.total_tokens) / 1_000_000)}</td>
               <td className="text-center lg:text-center pt-4">
-                ${toLocaleString(getLsdUsdValue(row, data.currentChain?.name?.toLowerCase(), usdValues))}
+                ${toLocaleString(getLsdUsdValue(row, tableData.currentChain?.id, usdValues))}
               </td>
               <td className="text-center lg:text-center pt-4">
-                {toLocaleString(getTakeRate(row, data.chainParams?.take_rate_claim_interval) * 100)}%
+                {toLocaleString(getTakeRate(row, tableData.chainParams?.take_rate_claim_interval as string) * 100)}%
               </td>
               <td className="text-center lg:text-center pt-4">{toLocaleString(parseFloat(row.reward_weight) * 100)}%</td>
               <td className="text-center lg:text-center pt-4">
                 {toLocaleString(
                   getAdditionalYield(
                     row,
-                    data.totalSupply?.amount,
-                    data.currentChain?.name?.toLowerCase(),
-                    data.currentChain?.inflation,
+                    tableData.totalSupply?.amount.toNumber() as number,
+                    tableData.currentChain?.id,
+                    tableData.inflation.toNumber(),
                     totalRewardWeight,
-                    data.chainParams?.take_rate_claim_interval,
+                    tableData.chainParams?.take_rate_claim_interval as string,
                     usdValues,
-                    data.currentChain?.decimals
+                    tableData.currentChain?.decimals
                   )
                 )}
                 %

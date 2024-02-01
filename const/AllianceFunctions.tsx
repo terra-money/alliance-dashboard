@@ -1,44 +1,43 @@
-import { Alliance } from "@/types/ResponseTypes";
+import { AllianceAsset } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI";
 import { supportedChains, supportedTokens } from "./Variables";
 
 const SECONDS_IN_YEAR = 31_536_000;
 
-export const getIcon = (row: Alliance, chain: string) => {
+export const getIcon = (row: AllianceAsset, chain: string) => {
   if (!chain) return "";
 
-  const chainMapped = supportedChains[chain].alliance_coins[row.denom];
+  const chainMapped = supportedChains[chain].allianceCoins[row.denom];
   return chainMapped ? chainMapped.icon : "";
 };
 
-export const getLsdUsdValue = (row: Alliance, chain: string, usdValues: any): number => {
+export const getLsdUsdValue = (row: AllianceAsset, chain: string, usdValues: any): number => {
   if (!chain) return 1;
 
-  const tokenName = supportedChains[chain].alliance_coins[row.denom]?.name;
+  const tokenName = supportedChains[chain]?.allianceCoins[row.denom]?.name;
 
   if (!tokenName) return 0;
-
   const value = usdValues[supportedTokens[tokenName]];
   return ((value ? value.usd : 0) * parseInt(row.total_tokens)) / 1000_000;
 };
 
-const getNativeUsdValue = (totalSupplyAmount: string, chain: string, usdValues: any, decimals: number) => {
-  const tokenName = supportedChains[chain]?.denom;
+const getNativeUsdValue = (totalSupplyAmount: number, chain: string, usdValues: any, decimals: number) => {
+  const tokenName = supportedChains[chain]?.bondDenom;
   const value = usdValues[supportedTokens[tokenName]];
-  return ((value ? value.usd : 0) * parseInt(totalSupplyAmount)) / 10 ** decimals;
+  return ((value ? value.usd : 0) * totalSupplyAmount) / 10 ** decimals;
 };
 
-const lsdLosePerYear = (row: Alliance, chain: string, takeRate: string, usdValues: any) => {
+const lsdLosePerYear = (row: AllianceAsset, chain: string, takeRate: string, usdValues: any) => {
   const usdStaked = getLsdUsdValue(row, chain, usdValues);
   return usdStaked * getTakeRate(row, takeRate);
 };
 
-export const getTakeRate = (row: Alliance, takeRate: string): number => {
+export const getTakeRate = (row: AllianceAsset, takeRate: string): number => {
   return 1 - (1 - parseFloat(row.take_rate)) ** (SECONDS_IN_YEAR / parseInt(takeRate));
 };
 
 const annualRewardsToLunaStakers = (
-  row: Alliance,
-  totalSupplyAmount: string,
+  row: AllianceAsset,
+  totalSupplyAmount: number,
   chain: string,
   inflation: number,
   totalRewardWeight: number,
@@ -50,8 +49,8 @@ const annualRewardsToLunaStakers = (
 };
 
 export const getAdditionalYield = (
-  row: Alliance,
-  totalSupplyAmount: string,
+  row: AllianceAsset,
+  totalSupplyAmount: number,
   chain: string,
   inflation: number,
   totalRewardWeight: number,

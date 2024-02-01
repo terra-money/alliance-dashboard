@@ -1,61 +1,69 @@
+import { LCD } from "@/const/LCDConfig";
 import { supportedTokens } from "@/const/Variables";
-import { Alliance, AllianceHubRewardDistributionResponse, AllianceHubTotalStakedResponse, AllianceResponse, Chain } from "@/types/ResponseTypes";
+import { Chain } from "@/types/Chain";
+import { AllianceBalanceEntry, AllianceHubRewardDistr } from "@/types/ResponseTypes";
+import { AllianceAsset } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI";
 
-type AllianceQuery = (chain: Chain) => Promise<AllianceResponse>;
 
-const DISTRIBUTION_QUERY = "eyJyZXdhcmRfZGlzdHJpYnV0aW9uIjoge319Cg%3D%3D";
-const TOTAL_STAKED_QUERY = "ewogICJ0b3RhbF9zdGFrZWRfYmFsYW5jZXMiOiB7fQp9";
+export const QueryAlliances = async (chain: Chain): Promise<AllianceAsset[]> => {
+  let { alliances } = await LCD.alliance.alliances(chain.id);
 
-export const QueryForAlliances: AllianceQuery = async (chain: Chain): Promise<AllianceResponse> => {
-  const chainResponse = await fetch(`${chain.lcd}/terra/alliances?pagination.limit=100`);
-  const resp = (await chainResponse.json()) as AllianceResponse;
-  resp.alliances = resp.alliances.filter((a) => a.denom !== "factory/migaloo190qz7q5fu4079svf890h4h3f8u46ty6cxnlt78eh486k9qm995hquuv9kd/ualliance");
+  // If has an alliance hub defined it means that some of the assets are 
+  // actuall delegated throught the hub contract. So it needs to account
+  // for the rates of the hub contract per each coin.
+  if (chain.hasAllianceHub()) {
+    const allianceHubAsset = alliances.find((a) => a.denom === chain.getAllianceHubDenom()) as AllianceAsset;
+    const alliancefromHub = await queryAllianceHubAssets(chain.getAllianceHubAddress(), allianceHubAsset);
 
-  if (chain.name === "Terra") {
-    const allianceHubDenom = Object.keys(chain.alliance_coins).find((key: string) => chain.alliance_coins[key].hub_contract);
-    if (allianceHubDenom) {
-      const allianceHubInfo = chain.alliance_coins[allianceHubDenom];
-      const allianceHubAlliance = resp.alliances.find((alliance) => alliance.denom === allianceHubDenom);
-      if (allianceHubAlliance && allianceHubInfo.hub_contract) {
-        const allianceHubSubAlliances = await QueryForAllianceHubAssets(chain.lcd, allianceHubInfo.hub_contract, allianceHubAlliance);
-        resp.alliances.push(...allianceHubSubAlliances);
-      }
-    }
-    resp.alliances = resp.alliances.filter((a) => a.denom !== allianceHubDenom);
+    alliances = alliances
+      .concat(...alliancefromHub)
+      .filter((a) => a.denom !== chain.getAllianceHubDenom());
   }
-  return resp;
+
+  return alliances;
 };
 
-const QueryForAllianceHubAssets = async (lcd: string, allianceHubContract: string, allianceHubAlliance: Alliance): Promise<Alliance[]> => {
-  const contractUrl = `${lcd}/cosmwasm/wasm/v1/contract/${allianceHubContract}/smart`;
-  const totalStakedRes = (await (await fetch(`${contractUrl}/${TOTAL_STAKED_QUERY}`)).json()) as AllianceHubTotalStakedResponse;
-  const rewardDistributionRes = (await (await fetch(`${contractUrl}/${DISTRIBUTION_QUERY}`)).json()) as AllianceHubRewardDistributionResponse;
+const queryAllianceHubAssets = async (contractAddr: string, allianceHubAlliance: AllianceAsset): Promise<AllianceAsset[]> => {
+  // Get the LCD client and query the contract for 
+  // rewards distribution and staked balances in 
+  // paralel to save time.
+  const res = await Promise.all([
+    LCD.wasm.contractQuery(contractAddr, { "reward_distribution": {} }),
+    LCD.wasm.contractQuery(contractAddr, { "total_staked_balances": {} })
+  ]) as any;
 
-  const totalDistribution = rewardDistributionRes.data.reduce((distribution, current) => {
-    if (+current.distribution > 0) {
-      return +current.distribution + distribution;
-    } else {
-      return distribution;
-    }
-  }, 0);
+  // Parse the responses into the types we need.
+  const rewardDistrRes: Array<AllianceBalanceEntry> = res[0].map(AllianceBalanceEntry.fromAny)
+  const totalStakedRes: Array<AllianceHubRewardDistr> = res[1].map(AllianceHubRewardDistr.fromAny)
 
-  const alliances: Alliance[] = [];
-  for (const distribution of rewardDistributionRes.data) {
-    if (+distribution.distribution <= 0) {
+  const totalDistribution = rewardDistrRes
+    .reduce((distribution, current) => {
+      if (+current.distribution > 0) {
+        return +current.distribution + distribution;
+      } else {
+        return distribution;
+      }
+    }, 0);
+
+  const alliances: AllianceAsset[] = [];
+  for (const distribution of rewardDistrRes) {
+    if (distribution.distribution <= 0) {
       continue;
     }
-    let totalStaked = totalStakedRes.data.find((res) => distribution.asset.native === res.asset.native)?.balance ?? "0";
+    let totalStaked = totalStakedRes.find((res: any) => distribution.getDenom() === res.getDenom())?.balance ?? 0;
     if (distribution.asset.native === supportedTokens["rSWTH"]) {
       // handle 8 decimals
-      totalStaked = "" + +totalStaked / 100;
+      totalStaked = totalStaked / 100;
     }
-    const a: Alliance = {
+    const a: AllianceAsset = {
       ...allianceHubAlliance,
-      denom: distribution.asset.native,
+      denom: distribution.getDenom(),
       reward_weight: "" + (+allianceHubAlliance.reward_weight * +distribution.distribution) / totalDistribution,
-      total_tokens: totalStaked,
+      total_tokens: totalStaked.toString(),
     };
     alliances.push(a);
   }
+
+
   return alliances;
 };

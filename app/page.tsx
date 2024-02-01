@@ -2,13 +2,12 @@
 
 import CSSLoader from "@/components/CSSLoader";
 import Card from "@/components/Card";
-import Graph from "@/components/Graph";
 import LoadingComponent from "@/components/LoadingComponent";
 import Pill from "@/components/Pill";
 import Table from "@/components/Table";
-import { MOCK_PRICES, defaultChain, pills, supportedChains } from "@/const/Variables";
-import { QueryForAlliances } from "@/lib/AllianceQuery";
-import { Alliance, AllianceResponse } from "@/types/ResponseTypes";
+import { defaultChain, pills, supportedChains } from "@/const/Variables";
+import { QueryAlliances } from "@/lib/AllianceQuery";
+import { AllianceAsset } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -16,7 +15,7 @@ import { Suspense, useEffect, useState } from "react";
 export default function Home() {
   const [usdValues, setUsdValues] = useState<any>();
   const [pillPrices, setPillPrices] = useState<any>(null);
-  const [data, setData] = useState<Alliance[]>([]);
+  const [data, setData] = useState<AllianceAsset[] | undefined>(undefined);
   const params = useSearchParams();
   const [loading, setLoading] = useState(true);
 
@@ -28,12 +27,11 @@ export default function Home() {
         const json = await result.json();
         setUsdValues({
           ...json,
-          ...MOCK_PRICES,
         });
 
         const priceResult = await fetch("https://pisco-price-server.terra.dev/latest");
         const pillJson = await priceResult.json();
-        setPillPrices(Object.fromEntries(pillJson.prices.map((p:any) => {
+        setPillPrices(Object.fromEntries(pillJson.prices.map((p: any) => {
           return [p.denom, {
             usd: p.price
           }]
@@ -42,16 +40,10 @@ export default function Home() {
       }
 
       const chain = supportedChains[params.get("selected") ?? defaultChain];
-      let response = [];
 
-      try {
-        const resp = await QueryForAlliances(chain);
-        response = [...resp.alliances];
-      } catch {
-        response = [...[]];
-      }
-
-      setData(response);
+      const res = await QueryAlliances(chain).catch(() => []);
+      console.log("res",res)
+      setData(res);
     })();
   }, [params]);
 

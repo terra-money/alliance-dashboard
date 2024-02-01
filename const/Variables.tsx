@@ -1,6 +1,7 @@
-import { Chain, Pill } from "@/types/ResponseTypes";
+import { Chain } from "@/types/Chain";
+import { Pill } from "@/types/ResponseTypes";
 
-export const defaultChain: string = "terra";
+export const defaultChain: string = "phoenix-1";
 
 export const pills: Pill[] = [
   {
@@ -9,12 +10,6 @@ export const pills: Pill[] = [
     symbol: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/Luna.svg",
     token: "LUNA",
   },
-  // {
-  //   id: 1,
-  //   name: "Kuji",
-  //   symbol: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/Kuji.svg",
-  //   token: "ibc/BB6BCDB515050BAE97516111873CCD7BCF1FD0CCB723CC12F3C4F704D6C646CE",
-  // },
   {
     id: 2,
     name: "Carbon",
@@ -40,17 +35,23 @@ export const supportedTokens: any = {
   rSWTH: "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098",
   ampWhale: "ibc/B3F639855EE7478750CC8F82072307ED6E131A8EFF20345E1D136B50C4E5EC36",
   bWhale: "ibc/517E13F14A1245D4DE8CF467ADD4DA0058974CDCC880FA6AE536DBCA1D16D84E",
+
+  // USDC-WHALE-LP
+  uLP: "factory/migaloo1xv4ql6t6r8zawlqn2tyxqsrvjpmjfm6kvdfvytaueqe3qvcwyr7shtx0hj/uLP",
+  // Migaloo Ash
+  ash: "factory/migaloo1erul6xyq0gk6ws98ncj7lnq9l4jn4gnnu9we73gdz78yyl2lr7qqrvcgup/ash",
+  // mUSDC (Ginkou USDC)
+  aaxlUSDT: "migaloo10nucfm2zqgzqmy7y7ls398t58pjt9cwjsvpy88y2nvamtl34rgmqt5em2v"
 };
 
 export const supportedChains: { [key: string]: Chain } = {
-  carbon: {
+  "carbon-1": Chain.fromAny({
+    id: "carbon-1",
+    bondDenom: "swth",
     name: "Carbon",
-    lcd: "https://lcd-carbon.tfl.foundation",
-    inflation: 0.0746,
-    denom: "swth",
     decimals: 8,
     icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Carbon.svg",
-    alliance_coins: {
+    allianceCoins: {
       "ibc/62A3870B9804FC3A92EAAA1F0F3F07E089DBF76CC521466CA33F5AAA8AD42290": {
         name: "ampLuna",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/ampLuna.svg",
@@ -62,24 +63,18 @@ export const supportedChains: { [key: string]: Chain } = {
         color: "#fb0174",
       },
     },
-  },
-  kujira: {
-    name: "Kujira",
-    lcd: "https://kujira-api.polkachu.com",
-    denom: "kuji",
-    inflation: 0,
-    decimals: 6,
-    icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Kujira.png",
-    alliance_coins: {},
-  },
-  migaloo: {
+  }),
+  "migaloo-1": Chain.fromAny({
+    id: "migaloo-1",
+    bondDenom: "uwhale",
     name: "Migaloo",
-    lcd: "https://ww-migaloo-rest.polkachu.com",
-    inflation: 0.08,
     decimals: 6,
-    denom: "uwhale",
+    allianceHub: {
+      contractAddress: "migaloo190qz7q5fu4079svf890h4h3f8u46ty6cxnlt78eh486k9qm995hquuv9kd",
+      denom: "factory/migaloo190qz7q5fu4079svf890h4h3f8u46ty6cxnlt78eh486k9qm995hquuv9kd/ualliance"
+    },
     icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Migaloo.svg",
-    alliance_coins: {
+    allianceCoins: {
       "ibc/05238E98A143496C8AF2B6067BABC84503909ECE9E45FBCBAC2CBA5C889FD82A": {
         name: "ampLuna",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/ampLuna.svg",
@@ -90,22 +85,37 @@ export const supportedChains: { [key: string]: Chain } = {
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/bLuna.png",
         color: "#ff7500",
       },
-    },
-  },
-  terra: {
-    name: "Terra",
-    lcd: "https://phoenix-lcd.terra.dev",
-    inflation: 0.07,
-    decimals: 6,
-    denom: "uluna",
-    icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Terra.svg",
-    alliance_coins: {
-      "factory/terra1jwyzzsaag4t0evnuukc35ysyrx9arzdde2kg9cld28alhjurtthq0prs2s/ualliance": {
-        name: "AllianceHub",
-        icon: "",
-        color: "",
-        hub_contract: "terra1jwyzzsaag4t0evnuukc35ysyrx9arzdde2kg9cld28alhjurtthq0prs2s",
+      "factory/migaloo1xv4ql6t6r8zawlqn2tyxqsrvjpmjfm6kvdfvytaueqe3qvcwyr7shtx0hj/uLP": {
+        name: "USDC-WHALE-LP",
+        icon: [
+          "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/USDC.svg",
+          "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/Whale.svg",
+        ],
+        color: "#3b74c5"
       },
+      "factory/migaloo1erul6xyq0gk6ws98ncj7lnq9l4jn4gnnu9we73gdz78yyl2lr7qqrvcgup/ash": {
+        name: "ASH",
+        icon: "images/ash.svg",
+        color: "#3CCD64"
+      },
+      "migaloo10nucfm2zqgzqmy7y7ls398t58pjt9cwjsvpy88y2nvamtl34rgmqt5em2v": {
+        name: "mUSDC",
+        icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/USDC.svg",
+        color: "#3b74c5"
+      },
+    },
+  }),
+  "phoenix-1": Chain.fromAny({
+    id: "phoenix-1",
+    bondDenom: "uluna",
+    name: "Terra",
+    decimals: 6,
+    allianceHub: {
+      contractAddress: "terra1jwyzzsaag4t0evnuukc35ysyrx9arzdde2kg9cld28alhjurtthq0prs2s",
+      denom: "factory/terra1jwyzzsaag4t0evnuukc35ysyrx9arzdde2kg9cld28alhjurtthq0prs2s/ualliance"
+    },
+    icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Terra.svg",
+    allianceCoins: {
       "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098": {
         name: "rSWTH",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/rSWTH.svg",
@@ -122,7 +132,7 @@ export const supportedChains: { [key: string]: Chain } = {
         color: "#fb0174",
       },
     },
-  },
+  }),
 };
 
 export const headers = [
@@ -141,10 +151,10 @@ export const headers = [
   },
   {
     title: "Reward Weight",
-    tooltip: (chain: string | null) => (
+    tooltip: (chainId: string | null) => (
       <>
         <p>The proportion of total staking rewards on this chain to be directed to stakers of this asset.</p>
-        {chain == "terra" && (
+        {chainId == "phoenix-1" && (
           <p>
             On Terra, based on the{" "}
             <a target="_blank" style={{ textDecoration: "underline" }} href="https://agora.terra.money/discussion/12477-alliance-followon-proposal">
@@ -161,12 +171,3 @@ export const headers = [
     tooltip: () => "A second annualized yield in the form of the chain's native token.",
   },
 ];
-
-export const MOCK_PRICES = {
-  "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098": {
-    chain: "phoenix-1",
-    contract_addr: "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098",
-    usd: 0.004,
-    change24h: 0,
-  },
-};
