@@ -1,9 +1,8 @@
 import { Metadata } from 'next'
 import '@/styles/globals.css';
-import Nav from '@/components/Nav';
-import { Footer } from '@/components/Footer';
+import Nav from '../components/Nav';
 import { Suspense } from 'react';
-import CSSLoader from '@/components/CSSLoader';
+import CSSLoader from '../components/CSSLoader';
 
 export const metadata: Metadata = {
   title: 'Alliance Analytics Dashboard',
@@ -47,7 +46,6 @@ export default function RootLayout({
           <Suspense fallback={<CSSLoader />}>
             {children}
           </Suspense>
-          <Footer />
         </main>
       </body>
     </html>

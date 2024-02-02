@@ -54,19 +54,20 @@ export interface ChainModel {
 
 export class AllianceCoin {
     name: string;
+    priceKey?: string;
     icon?: string | string[];
     color?: string;
     hubContractAddr?: string;
 
-    constructor(model: AllianceCoinModel) {
-        this.name = model.name;
-        this.icon = model.icon;
-        this.color = model.color || "";
-        this.hubContractAddr = model.hubContractAddr || "";
+    constructor(model?: AllianceCoinModel) {
+        this.name = model?.name || "";
+        this.icon = model?.icon;
+        this.color = model?.color || "";
+        this.hubContractAddr = model?.hubContractAddr || "";
     }
 
     static fromAny(model: any): AllianceCoin {
-        return new AllianceCoin(model);
+        return Object.assign(new AllianceCoin(), model);
     }
 }
 

@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import styles from "@/styles/Dropdown.module.css";
-import { supportedChains, defaultChain } from "@/const/Variables";
 import { useRouter, useSearchParams } from "next/navigation";
+import { DEFAULT_CHAIN, SUPPORTED_CHAINS } from "../const/chains";
 
 export default function Dropdown() {
   const params = useSearchParams();
   const [show, setShow] = useState<boolean>(false);
-  const [selected, setSelected] = useState<any>(supportedChains[params.get("selected") ?? defaultChain]);
+  const [selected, setSelected] = useState<any>(SUPPORTED_CHAINS[params.get("selected") ?? DEFAULT_CHAIN]);
   const router = useRouter();
 
   return (
@@ -35,17 +35,17 @@ export default function Dropdown() {
       )}
       <div id={"dropdown"} className={`${show ? "" : styles.reversed} hidden`}>
         <ul>
-          {Object.keys(supportedChains).map((chain) => (
+          {Object.keys(SUPPORTED_CHAINS).map((chain) => (
             <li
               key={chain}
               className="flex gap-3 p-3 items-center"
               onClick={() => {
-                setSelected(supportedChains[chain]);
-                router.push(`?selected=${supportedChains[chain].id.toLocaleLowerCase()}`);
+                setSelected(SUPPORTED_CHAINS[chain]);
+                router.push(`?selected=${SUPPORTED_CHAINS[chain].id}`);
               }}
             >
-              <img src={supportedChains[chain].icon} alt={chain} width={30} height={30} />
-              <span>{supportedChains[chain].name}</span>
+              <img src={SUPPORTED_CHAINS[chain].icon} alt={chain} width={30} height={30} />
+              <span>{SUPPORTED_CHAINS[chain].name}</span>
             </li>
           ))}
         </ul>

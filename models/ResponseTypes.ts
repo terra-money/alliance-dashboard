@@ -1,10 +1,3 @@
-export interface Pill {
-  id: number;
-  name: string;
-  symbol: string;
-  token: string;
-}
-
 export class AllianceBalanceEntry {
   asset: Asset;
   distribution: number;

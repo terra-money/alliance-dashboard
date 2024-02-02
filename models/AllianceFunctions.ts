@@ -1,28 +1,29 @@
 import { AllianceAsset } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI";
-import { supportedChains, supportedTokens } from "./Variables";
+import { SUPPORTED_CHAINS } from "../const/chains";
 
+const SUPPORTED_TOKENS = {} as any;
 const SECONDS_IN_YEAR = 31_536_000;
 
 export const getIcon = (row: AllianceAsset, chain: string) => {
   if (!chain) return "";
 
-  const chainMapped = supportedChains[chain].allianceCoins[row.denom];
+  const chainMapped = SUPPORTED_CHAINS[chain].allianceCoins[row.denom];
   return chainMapped ? chainMapped.icon : "";
 };
 
 export const getLsdUsdValue = (row: AllianceAsset, chain: string, usdValues: any): number => {
   if (!chain) return 1;
 
-  const tokenName = supportedChains[chain]?.allianceCoins[row.denom]?.name;
+  const tokenName = SUPPORTED_CHAINS[chain]?.allianceCoins[row.denom]?.name;
 
   if (!tokenName) return 0;
-  const value = usdValues[supportedTokens[tokenName]];
+  const value = usdValues[SUPPORTED_TOKENS[tokenName]];
   return ((value ? value.usd : 0) * parseInt(row.total_tokens)) / 1000_000;
 };
 
 const getNativeUsdValue = (totalSupplyAmount: number, chain: string, usdValues: any, decimals: number) => {
-  const tokenName = supportedChains[chain]?.bondDenom;
-  const value = usdValues[supportedTokens[tokenName]];
+  const tokenName = SUPPORTED_CHAINS[chain]?.bondDenom;
+  const value = usdValues[SUPPORTED_TOKENS[tokenName]];
   return ((value ? value.usd : 0) * totalSupplyAmount) / 10 ** decimals;
 };
 

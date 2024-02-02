@@ -1,7 +1,6 @@
-import { LCD } from "@/const/LCDConfig";
-import { supportedTokens } from "@/const/Variables";
-import { Chain } from "@/types/Chain";
-import { AllianceBalanceEntry, AllianceHubRewardDistr } from "@/types/ResponseTypes";
+import { LCD } from "../models/LCDConfig";
+import { Chain } from "../models/Chain";
+import { AllianceBalanceEntry, AllianceHubRewardDistr } from "../models/ResponseTypes";
 import { AllianceAsset } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI";
 
 
@@ -51,7 +50,8 @@ const queryAllianceHubAssets = async (contractAddr: string, allianceHubAlliance:
       continue;
     }
     let totalStaked = totalStakedRes.find((res: any) => distribution.getDenom() === res.getDenom())?.balance ?? 0;
-    if (distribution.asset.native === supportedTokens["rSWTH"]) {
+    // TODO: fix this at somepoint sWETH
+    if (distribution.asset.native === "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098") {
       // handle 8 decimals
       totalStaked = totalStaked / 100;
     }

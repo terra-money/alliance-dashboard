@@ -1,48 +1,42 @@
 "use client";
 
-import CSSLoader from "@/components/CSSLoader";
-import Card from "@/components/Card";
-import LoadingComponent from "@/components/LoadingComponent";
-import Pill from "@/components/Pill";
-import Table from "@/components/Table";
-import { defaultChain, pills, supportedChains } from "@/const/Variables";
-import { QueryAlliances } from "@/lib/AllianceQuery";
+import CSSLoader from "../components/CSSLoader";
+import Card from "../components/Card";
+import Kpi from "../components/Kpi";
+import Table from "../components/Table";
+import { DEFAULT_CHAIN, SUPPORTED_CHAINS } from "../const/chains";
+import { QueryAlliances } from "../lib/AllianceQuery";
 import { AllianceAsset } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import { mergePrices, Prices, TerraPriceServerResponse } from "../models/Prices";
+import { Kpis } from "../const/kpis";
 
 export default function Home() {
-  const [usdValues, setUsdValues] = useState<any>();
-  const [pillPrices, setPillPrices] = useState<any>(null);
+  const [prices, setPrices] = useState<Prices>({});
   const [data, setData] = useState<AllianceAsset[] | undefined>(undefined);
   const params = useSearchParams();
-  const [loading, setLoading] = useState(true);
+  const selectedChain = SUPPORTED_CHAINS[params.get("selected") ?? DEFAULT_CHAIN];
 
   useEffect(() => {
+    setData(undefined);
     (async () => {
-      if (!usdValues || !pillPrices) {
-        setLoading(true);
-        const result = await fetch("https://price.api.tfm.com/tokens/?limit=1500");
-        const json = await result.json();
-        setUsdValues({
-          ...json,
-        });
+      // If prices are not loaded, load them from the API(s)
+      // Otherwise, use the cached prices
+      if (Object.keys(prices).length === 0) {
+        const res = await Promise.all([
+          fetch("https://price.api.tfm.com/tokens/?limit=1500"),
+          fetch("https://pisco-price-server.terra.dev/latest")
+        ]);
+        const [tfmPrices, terraOraclePrices]: [Prices, TerraPriceServerResponse] = await Promise.all([res[0].json(), res[1].json()]);
+        let prices = mergePrices(tfmPrices, terraOraclePrices);
 
-        const priceResult = await fetch("https://pisco-price-server.terra.dev/latest");
-        const pillJson = await priceResult.json();
-        setPillPrices(Object.fromEntries(pillJson.prices.map((p: any) => {
-          return [p.denom, {
-            usd: p.price
-          }]
-        })))
-        setLoading(false);
+        setPrices(prices);
       }
 
-      const chain = supportedChains[params.get("selected") ?? defaultChain];
+      const res = await QueryAlliances(selectedChain).catch(() => []);
 
-      const res = await QueryAlliances(chain).catch(() => []);
-      console.log("res",res)
       setData(res);
     })();
   }, [params]);
@@ -73,15 +67,15 @@ export default function Home() {
         </h3>
       </div>
       <div className="flex flex-col pt-3 pb-3 mt-12 overflow-auto">
-        <LoadingComponent isLoading={loading} values={pillPrices}>
-          <div className="flex gap-3">{pillPrices && pills.map((pill) => <Pill key={pill.id} pill={pill} data={pillPrices[pill.token]} />)}</div>
-        </LoadingComponent>
+        <div className="flex gap-3">
+          {Kpis.map((kpi) => <Kpi key={kpi.id} kpi={kpi} data={prices[kpi.token]} />)}
+        </div>
       </div>
       <div className="flex w-full flex-col lg:flex-row gap-3">
         <div className="w-full lg:w-6/6">
           <Card name="Assets">
             <Suspense fallback={<CSSLoader />}>
-              <Table usdValues={usdValues} values={data} />
+              <Table prices={prices} allianceAssets={data} selectedChain={selectedChain} />
             </Suspense>
           </Card>
         </div>
