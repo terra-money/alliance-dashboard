@@ -83,7 +83,7 @@ export const SUPPORTED_CHAINS: { [key: string]: Chain } = {
     allianceCoins: {
       "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098": {
         name: "rSWTH",
-        priceKey: "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098",
+        priceKey: "rSWTH",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/rSWTH.svg",
         color: "#324ab2",
       },

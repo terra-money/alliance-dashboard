@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import '@/styles/globals.css';
+import '../styles/globals.css';
 import Nav from '../components/Nav';
 import { Suspense } from 'react';
 import CSSLoader from '../components/CSSLoader';

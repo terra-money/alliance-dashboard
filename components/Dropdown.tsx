@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import styles from "@/styles/Dropdown.module.css";
+import styles from "../styles/Dropdown.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DEFAULT_CHAIN, SUPPORTED_CHAINS } from "../const/chains";
 

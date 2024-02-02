@@ -8,7 +8,7 @@ import { DEFAULT_CHAIN, SUPPORTED_CHAINS } from "../const/chains";
 import { QueryAlliances } from "../lib/AllianceQuery";
 import { AllianceAsset } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { mergePrices, Prices, TerraPriceServerResponse } from "../models/Prices";
 import { Kpis } from "../const/kpis";
@@ -17,7 +17,13 @@ export default function Home() {
   const [prices, setPrices] = useState<Prices>({});
   const [data, setData] = useState<AllianceAsset[] | undefined>(undefined);
   const params = useSearchParams();
-  const selectedChain = SUPPORTED_CHAINS[params.get("selected") ?? DEFAULT_CHAIN];
+  let selectedChain = SUPPORTED_CHAINS[params.get("selected") ?? DEFAULT_CHAIN];
+  const router = useRouter();
+
+  if (selectedChain === undefined) {
+    selectedChain = SUPPORTED_CHAINS[DEFAULT_CHAIN];
+    router.push(`?selected=${SUPPORTED_CHAINS[DEFAULT_CHAIN].id}`)
+  }
 
   useEffect(() => {
     setData(undefined);
