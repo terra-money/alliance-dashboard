@@ -62,22 +62,11 @@ export default function Home() {
       </h1>
       <span className="font-bold">Built by Big labs</span>
       <div className="info_text_bold mt-8">
-        <h3>Alliance allows blockchains to trade yield with each other.</h3>
+        <h3>Alliance strengthens decentralized economies through the usage of Alliance assets.</h3>
       </div>
       <div className="info_text mt-2">
         <h3>
-          Learn more about Alliance{" "}
-          <Link href="https://docs.alliance.terra.money/">
-            <u>here</u>
-          </Link>
-        </h3>
-      </div>
-      <div className="info_text mt-2">
-        <h3>
-          <Link href="https://twitter.com/terra_money/status/1695426843787305313">
-            <u>Stake</u>
-          </Link>
-          {" "}Alliance assets on Terra
+          Learn how to <Link href="https://medium.com/terra-money/how-to-stake-alliance-assets-a-step-by-step-guide-8e1b263830c2"><u>stake Alliance assets</u></Link>.
         </h3>
       </div>
       <div className="flex flex-col pt-3 pb-3 mt-12 overflow-auto">
