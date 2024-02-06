@@ -45,7 +45,7 @@ export const supportedTokens: any = {
 export const supportedChains: { [key: string]: Chain } = {
   carbon: {
     name: "Carbon",
-    lcd: "https://query-api.carbon.network",
+    lcd: "https://lcd-carbon.tfl.foundation",
     inflation: 0.0746,
     denom: "swth",
     decimals: 8,
