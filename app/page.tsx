@@ -66,15 +66,7 @@ export default function Home() {
       </div>
       <div className="info_text mt-2">
         <h3>
-          Learn how to <Link href="https://medium.com/terra-money/how-to-stake-alliance-assets-a-step-by-step-guide-8e1b263830c2">stake Alliance assets</Link>.
-        </h3>
-      </div>
-      <div className="info_text mt-2">
-        <h3>
-          <Link href="https://twitter.com/terra_money/status/1695426843787305313">
-            <u>Stake</u>
-          </Link>
-          {" "}Alliance assets on Terra
+          Learn how to <Link href="https://medium.com/terra-money/how-to-stake-alliance-assets-a-step-by-step-guide-8e1b263830c2"><u>stake Alliance assets</u></Link>.
         </h3>
       </div>
       <div className="flex flex-col pt-3 pb-3 mt-12 overflow-auto">
