@@ -3,6 +3,7 @@
 export class Chain implements ChainModel {
     id: string;
     bondDenom: string;
+    bondDenomPriceKey: string;
     name: string;
     decimals: number;
     icon: string;
@@ -21,6 +22,7 @@ export class Chain implements ChainModel {
         this.icon = model.icon;
         this.allianceCoins = {};
         this.allianceHub = model.allianceHub;
+        this.bondDenomPriceKey = model.bondDenomPriceKey
 
         for (const key in model.allianceCoins) {
             let coin = model.allianceCoins[key]
@@ -40,6 +42,7 @@ export class Chain implements ChainModel {
 export interface ChainModel {
     id: string;
     bondDenom: string;
+    bondDenomPriceKey: string;
     name: string;
     decimals: number;
     icon: string;

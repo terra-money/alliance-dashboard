@@ -27,7 +27,7 @@ const getNativeUsdValue = (totalSupplyAmount: number, chain: string, usdValues: 
   return ((value ? value.usd : 0) * totalSupplyAmount) / 10 ** decimals;
 };
 
-const lsdLosePerYear = (row: AllianceAsset, chain: string, takeRate: string, usdValues: any) => {
+const calcLsdLosePerYear = (row: AllianceAsset, chain: string, takeRate: string, usdValues: any) => {
   const usdStaked = getLsdUsdValue(row, chain, usdValues);
   return usdStaked * getTakeRate(row, takeRate);
 };
@@ -60,11 +60,13 @@ export const getAdditionalYield = (
   decimals: number
 ) => {
   const usdStaked = getLsdUsdValue(row, chain, usdValues);
+  console.log("usdStaked", usdStaked)
+  const annualRewardsToNativeStakers = annualRewardsToLunaStakers(row, totalSupplyAmount, chain, inflation, totalRewardWeight, usdValues, decimals);
+  console.log("annualRewardsToNativeStakers", annualRewardsToNativeStakers)
+  const lsdLosePerYear = calcLsdLosePerYear(row, chain, takeRate, usdValues);
+  console.log("lsdLosePerYear", lsdLosePerYear)
   return (
-    (100 *
-      (annualRewardsToLunaStakers(row, totalSupplyAmount, chain, inflation, totalRewardWeight, usdValues, decimals) -
-        lsdLosePerYear(row, chain, takeRate, usdValues))) /
-    usdStaked
+    (100 * (annualRewardsToNativeStakers - lsdLosePerYear)) / usdStaked
   );
 };
 

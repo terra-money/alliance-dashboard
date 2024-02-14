@@ -4,7 +4,7 @@ import { Chain } from "./Chain";
 import { DEFAULT_CHAIN, SUPPORTED_CHAINS } from "../const/chains";
 import { Prices } from "./Prices";
 
-
+const SECONDS_IN_YEAR = 31_536_000;
 export default class TableState {
     private _totalRewardWeight: number = 0;
 
@@ -51,43 +51,79 @@ export default class TableState {
         return this.selectedChain.allianceCoins[denom]?.name
     }
 
-    getTotalTokens = (denom: string): string => {
+    getTotalTokens = (denom: string): number => {
         const totalTokens = this.allianceAssets?.find((asset) => asset.denom === denom)?.total_tokens;
         if (totalTokens === undefined) {
-            return "-"
+            return 0
         }
 
-        return this._toLocalString(parseInt(totalTokens) / 1_000_000);
+        return parseInt(totalTokens) / 1_000_000;
     }
 
-    getTotalValueStaked = (denom: string): string => {
+    getTotalValueStaked = (denom: string): number => {
         const priceKey = this.selectedChain.allianceCoins[denom]?.priceKey;
-        console.log("priceKey",priceKey)
         if (priceKey === undefined) {
-            return "-"
+            return 0
         }
-        console.log(this.prices)
         const usdPrice = this.prices[priceKey]?.usd;
-        console.log("usdPrice",usdPrice)
         if (usdPrice === undefined) {
-            return "-"
+            return 0
         }
 
         const totalTokens = this.allianceAssets?.find((asset) => asset.denom === denom)?.total_tokens;
-        console.log("totalTokens",totalTokens)
         if (totalTokens === undefined) {
-            return "-"
+            return 0
         }
 
-        
-        //  toLocaleString(getLsdUsdValue(row, tableState.selectedChain?.id, prices))
-        return this._toLocalString(usdPrice * (parseInt(totalTokens) / 1_000_000))
+        return usdPrice * (parseInt(totalTokens) / 1_000_000)
     }
 
-    private _toLocalString(n: number): string {
-        return n.toLocaleString("en-US", {
-            maximumFractionDigits: 2,
-            minimumFractionDigits: 2,
-        });
+    getTakeRate = (denom: string): number => {
+        if (this.chainParams?.take_rate_claim_interval === undefined) {
+            return 0
+        }
+        const takeRateClaimInterval = parseInt(this.chainParams.take_rate_claim_interval);
+        const denomTakeRate = this.allianceAssets?.find((asset) => asset.denom === denom)?.take_rate;
+        if (denomTakeRate === undefined) {
+            return 0
+        }
+        const takeRate = 1 - (1 - parseFloat(denomTakeRate)) ** (SECONDS_IN_YEAR / takeRateClaimInterval);
+        return takeRate * 100;
+    };
+
+    getAdditionalYield = (denom: string): number => {
+        const asset = this.allianceAssets?.find((asset) => asset.denom === denom);
+        if (asset === undefined) {
+            return 0
+        }
+        const nativeTokenPrice = this.prices[this.selectedChain.bondDenomPriceKey]?.usd;
+        const nativeTokenTotalSupply = new Dec(this.totalSupply?.amount);
+        const nativeTokenMarketCap = new Dec(nativeTokenPrice).mul(nativeTokenTotalSupply).div(10 ** this.selectedChain.decimals);
+
+        let totalAssetStakedInUSD = new Dec(this.getTotalValueStaked(denom));
+        console.log("totalAssetStakedInUSD", totalAssetStakedInUSD.toString())
+        if (totalAssetStakedInUSD.isNaN()) {
+            return 0
+        }
+
+        const assetRewardWeight = new Dec(asset.reward_weight);
+        const annualRewardsToNativeStakers = nativeTokenMarketCap.mul(this.inflation)
+            .mul(assetRewardWeight.div(1 + this._totalRewardWeight));
+        console.log("annualRewardsToNativeStakers", annualRewardsToNativeStakers.toString())
+
+        const lsdLosePerYear = totalAssetStakedInUSD.mul(this.getTakeRate(denom));
+        console.log("lsdLosePerYear", lsdLosePerYear.toString())
+        const a = lsdLosePerYear.minus(assetRewardWeight).mul(100);
+        console.log("a", a.toString())
+        console.log("final", a.div(totalAssetStakedInUSD).toString())
+        console.log("final", a.div(totalAssetStakedInUSD).toNumber())
+        return a.div(totalAssetStakedInUSD).toNumber();
     }
+}
+
+export function toLocalString(n: number): string {
+    return n.toLocaleString("en-US", {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+    });
 }

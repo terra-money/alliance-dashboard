@@ -70,27 +70,11 @@ export default function Table({ selectedChain, allianceAssets, prices }: TablePr
             <tr key={row.denom}>
               <td className="flex justify-start lg:justify-center pt-4"><TableIcon row={row} chain={tableState.selectedChain} /></td>
               <td className="text-center lg:text-center pt-4">{tableState.getAllianceAssetName(row.denom)}</td>
-              <td className="text-center lg:text-center pt-4">{tableState.getTotalTokens(row.denom) }</td>
-              <td className="text-center lg:text-center pt-4">${tableState.getTotalValueStaked(row.denom)}</td>
-              <td className="text-center lg:text-center pt-4">
-                {toLocaleString(getTakeRate(row, tableState.chainParams?.take_rate_claim_interval as string) * 100)}%
-              </td>
+              <td className="text-center lg:text-center pt-4">{toLocaleString(tableState.getTotalTokens(row.denom))}</td>
+              <td className="text-center lg:text-center pt-4">${toLocaleString(tableState.getTotalValueStaked(row.denom))}</td>
+              <td className="text-center lg:text-center pt-4">{toLocaleString(tableState.getTakeRate(row.denom))}%</td>
               <td className="text-center lg:text-center pt-4">{toLocaleString(parseFloat(row.reward_weight) * 100)}%</td>
-              <td className="text-center lg:text-center pt-4">
-                {toLocaleString(
-                  getAdditionalYield(
-                    row,
-                    tableState.totalSupply?.amount.toNumber() as number,
-                    tableState.selectedChain?.id,
-                    tableState.inflation.toNumber(),
-                    tableState.getTotalRewardWeight(),
-                    tableState.chainParams?.take_rate_claim_interval as string,
-                    prices,
-                    tableState.selectedChain?.decimals
-                  )
-                )}
-                %
-              </td>
+              <td className="text-center lg:text-center pt-4">{toLocaleString(tableState.getAdditionalYield(row.denom))}%</td>
             </tr>
           ))}
         </tbody>

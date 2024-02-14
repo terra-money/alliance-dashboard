@@ -6,6 +6,7 @@ export const SUPPORTED_CHAINS: { [key: string]: Chain } = {
   "carbon-1": Chain.fromAny({
     id: "carbon-1",
     bondDenom: "swth",
+    bondDenomPriceKey: "SWTH",
     name: "Carbon",
     decimals: 8,
     icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Carbon.svg",
@@ -27,6 +28,7 @@ export const SUPPORTED_CHAINS: { [key: string]: Chain } = {
   "migaloo-1": Chain.fromAny({
     id: "migaloo-1",
     bondDenom: "uwhale",
+    bondDenomPriceKey: "WHALE",
     name: "Migaloo",
     decimals: 6,
     allianceHub: {
@@ -73,6 +75,7 @@ export const SUPPORTED_CHAINS: { [key: string]: Chain } = {
   "phoenix-1": Chain.fromAny({
     id: "phoenix-1",
     bondDenom: "uluna",
+    bondDenomPriceKey: "LUNA",
     name: "Terra",
     decimals: 6,
     allianceHub: {
