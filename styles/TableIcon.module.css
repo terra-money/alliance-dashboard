@@ -15,6 +15,10 @@
     height: 34px;
 }
 
+.IconWrapper .ManyIcons img:first-child {
+    right: 8px;
+}
+
 .IconWrapper .ManyIcons img:last-child {
-    right: 0;
+    right: -4px;
 }
