@@ -15,8 +15,15 @@ export interface Prices {
     }
 }
 
-export const mergePrices = (tfmPrices: Prices, tpsr: TerraPriceServerResponse): Prices => {
-    const prices = tpsr.prices.reduce((acc, price) => {
+// Query all prices from the different servers
+// available and merge them into a single object
+export const QueryAndMergePrices = async (): Promise<Prices> => {
+    const pricesRes = await Promise.all([
+        fetch("https://price.api.tfm.com/tokens/?limit=1500"),
+        fetch("https://pisco-price-server.terra.dev/latest")
+    ]);
+    const [tfmPrices, terraOraclePrices]: [Prices, TerraPriceServerResponse] = await Promise.all([pricesRes[0].json(), pricesRes[1].json()]);
+    const prices = terraOraclePrices.prices.reduce((acc, price) => {
         acc[price.denom] = {
             chain: "",
             change24h: 0,

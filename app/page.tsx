@@ -5,47 +5,88 @@ import Card from "../components/Card";
 import Kpi from "../components/Kpi";
 import Table from "../components/Table";
 import { DEFAULT_CHAIN, SUPPORTED_CHAINS } from "../const/chains";
-import { QueryAlliances } from "../lib/AllianceQuery";
-import { AllianceAsset } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI";
+import { QueryAlliances } from "../lib/QueryAlliances";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import { mergePrices, Prices, TerraPriceServerResponse } from "../models/Prices";
+import { Prices, QueryAndMergePrices } from "../models/Prices";
 import { Kpis } from "../const/kpis";
+import { LCD } from "../models/LCDConfig";
+import TableState from "../models/TableState";
+import { GetInflationEndpoint, ParseInflation } from "../lib/QueryInflation";
+import { QueryLP } from "../lib/QueryLP";
+import { Chain } from "../models/Chain";
 
 export default function Home() {
-  const [prices, setPrices] = useState<Prices>({});
-  const [data, setData] = useState<AllianceAsset[] | undefined>(undefined);
   const params = useSearchParams();
-  let selectedChain = SUPPORTED_CHAINS[params.get("selected") ?? DEFAULT_CHAIN];
   const router = useRouter();
 
-  if (selectedChain === undefined) {
-    selectedChain = SUPPORTED_CHAINS[DEFAULT_CHAIN];
-    router.push(`?selected=${SUPPORTED_CHAINS[DEFAULT_CHAIN].id}`)
-  }
+  const [tableState, setTableState] = useState<TableState | null>(null);
+  const [selectedChain, setSelectedChain] = useState<Chain | undefined>(undefined);
+  const [prices, setPrices] = useState<Prices>({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setData(undefined);
-    (async () => {
-      // If prices are not loaded, load them from the API(s)
-      // Otherwise, use the cached prices
-      if (Object.keys(prices).length === 0) {
-        const res = await Promise.all([
-          fetch("https://price.api.tfm.com/tokens/?limit=1500"),
-          fetch("https://pisco-price-server.terra.dev/latest")
-        ]);
-        const [tfmPrices, terraOraclePrices]: [Prices, TerraPriceServerResponse] = await Promise.all([res[0].json(), res[1].json()]);
-        let prices = mergePrices(tfmPrices, terraOraclePrices);
+    const selectedParamIsSupported = SUPPORTED_CHAINS[params.get("selected") as any];
+    if (selectedParamIsSupported) {
+      setSelectedChain(SUPPORTED_CHAINS[params.get("selected") as string]);
+    } else {
+      setSelectedChain(SUPPORTED_CHAINS[DEFAULT_CHAIN])
+      router.push(`?selected=${SUPPORTED_CHAINS[DEFAULT_CHAIN].id}`);
+    }
+  }, [params])
 
-        setPrices(prices);
-      }
+  useEffect(() => {
+    if (selectedChain) {
+      setIsLoading(true);
+      (async () => {
+        // Load the prices only the first time a user lands on 
+        // the page, then use the prices from the state.
+        // 
+        // NOTE: the variable is not being shadowed because otherwise 
+        // the first load will result on 0 prices.
+        const _prices = Object.keys(prices).length === 0 ? await QueryAndMergePrices() : prices;
+        setPrices(_prices);
 
-      const res = await QueryAlliances(selectedChain).catch(() => []);
+        // Query selectedChain alliances info
+        const _allianceAssetRes = await QueryAlliances(selectedChain).catch(() => []);
 
-      setData(res);
-    })();
-  }, [params]);
+        // Query chain info on parallel to speed up the loading time
+        let chainInfoRes = await Promise.all([
+          LCD.alliance.params(selectedChain.id),
+          LCD.bank.supplyByDenom(selectedChain.id, selectedChain.bondDenom),
+          GetInflationEndpoint(selectedChain.id),
+        ]).catch((e) => {
+          console.error(e)
+          return []
+        });
+
+        // Query this info in parallel to speed up the loading time
+        // because the requested data is independent from each other
+        const [inflation, allianceCoins] = await Promise.all([
+          ParseInflation(selectedChain.id, chainInfoRes[2]),
+          QueryLP(selectedChain.allianceCoins)
+        ])
+
+        selectedChain.allianceCoins = allianceCoins;
+
+        // If no error occured, set the data
+        // otherwise, keep the default data
+        if (chainInfoRes != undefined) {
+          let tableState = new TableState(
+            selectedChain,
+            _allianceAssetRes,
+            _prices,
+            chainInfoRes[0].params,
+            chainInfoRes[1],
+            inflation,
+          );
+          setTableState(tableState)
+        }
+        setIsLoading(false);
+      })();
+    }
+  }, [selectedChain]);
 
   return (
     <section className="w-full flex-col">
@@ -72,7 +113,7 @@ export default function Home() {
           {" "}Alliance assets on Terra
         </h3>
       </div>
-      <div className="flex flex-col pt-3 pb-3 mt-12 overflow-auto">
+      <div className="flex flex-col pt-3 mt-12 overflow-auto">
         <div className="flex gap-3">
           {Kpis.map((kpi) => <Kpi key={kpi.id} kpi={kpi} data={prices[kpi.token]} />)}
         </div>
@@ -81,17 +122,10 @@ export default function Home() {
         <div className="w-full lg:w-6/6">
           <Card name="Assets">
             <Suspense fallback={<CSSLoader />}>
-              <Table prices={prices} allianceAssets={data} selectedChain={selectedChain} />
+              <Table tableState={tableState} isLoading={isLoading} />
             </Suspense>
           </Card>
         </div>
-        {/* <div className="w-full lg:w-2/6">
-          <Card name="Overview" className="flex flex-col items-center overflow-auto">
-            <Suspense fallback={<CSSLoader />}>
-              <Graph values={data} />
-            </Suspense>
-          </Card>
-        </div> */}
       </div>
     </section>
   );

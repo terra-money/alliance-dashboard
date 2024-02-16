@@ -15,7 +15,7 @@ export const headers = [
   },
   {
     title: "Reward Weight",
-    tooltip: (chainId: string | null) => (
+    tooltip: (chainId?: string) => (
       <>
         <p>The proportion of total staking rewards on this chain to be directed to stakers of this asset.</p>
         {chainId == "phoenix-1" && (

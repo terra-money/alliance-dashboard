@@ -1,52 +1,18 @@
 "use client";
-import { useEffect, useState } from "react";
 import { Tooltip } from "@nextui-org/react";
-import { getAdditionalYield, getTakeRate, toLocaleString } from "../models/AllianceFunctions";
 import LoadingComponent from "./LoadingComponent";
-import { AllianceAsset } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI";
-import { LCD } from "../models/LCDConfig";
 import { TableIcon } from "../components/TableIcon";
-import TableState from "../models/TableState";
-import { Prices } from "../models/Prices";
-import { Chain } from "../models/Chain";
+import TableState, {toLocalString} from "../models/TableState";
 import { headers } from "../const/table";
 
 interface TableProps {
-  allianceAssets: AllianceAsset[] | undefined;
-  prices: Prices
-  selectedChain: Chain;
+  tableState: TableState | null;
+  isLoading: boolean;
 }
 
-export default function Table({ selectedChain, allianceAssets, prices }: TableProps) {
-  const [tableState, setTableState] = useState<TableState>(TableState.default(selectedChain));
-
-  useEffect(() => {
-    (async () => {
-      // Query the data on paralel to speed up the loading time
-      const res = await Promise.all([
-        LCD.alliance.params(selectedChain.id),
-        LCD.bank.supplyByDenom(selectedChain.id, selectedChain.bondDenom),
-        LCD.mint.inflation(selectedChain.id),
-      ]).catch((e) => { console.error(e) });
-
-      // If no error occured, set the data
-      // otherwise, keep the default data
-      if (res != undefined) {
-        let tableState = new TableState(
-          selectedChain,
-          allianceAssets,
-          prices,
-          res[0].params,
-          res[1],
-          res[2],
-        );
-        setTableState(tableState)
-      }
-    })();
-  }, [allianceAssets, selectedChain]);
-
+export default function Table({ tableState, isLoading}: TableProps) {
   return (
-    <LoadingComponent isLoading={tableState.allianceAssets === undefined} values={tableState.allianceAssets}>
+    <LoadingComponent isLoading={isLoading} values={tableState?.allianceAssets}>
       <table className="w-full h-full border-collapse mb-3">
         <thead>
           <tr className="table_row">
@@ -56,7 +22,7 @@ export default function Table({ selectedChain, allianceAssets, prices }: TablePr
                 <div className="justify-start lg:justify-center flex items-center gap-1">
                   {v.title}
                   {v.tooltip ? (
-                    <Tooltip content={v.tooltip(tableState.selectedChain.id)}>
+                    <Tooltip content={v.tooltip(tableState?.selectedChain.id)}>
                       <img src="/images/info.svg" alt="Info" width={20} height={20} />
                     </Tooltip>
                   ) : null}
@@ -70,11 +36,11 @@ export default function Table({ selectedChain, allianceAssets, prices }: TablePr
             <tr key={row.denom}>
               <td className="flex justify-start lg:justify-center pt-4"><TableIcon row={row} chain={tableState.selectedChain} /></td>
               <td className="text-center lg:text-center pt-4">{tableState.getAllianceAssetName(row.denom)}</td>
-              <td className="text-center lg:text-center pt-4">{toLocaleString(tableState.getTotalTokens(row.denom))}</td>
-              <td className="text-center lg:text-center pt-4">${toLocaleString(tableState.getTotalValueStaked(row.denom))}</td>
-              <td className="text-center lg:text-center pt-4">{toLocaleString(tableState.getTakeRate(row.denom))}%</td>
-              <td className="text-center lg:text-center pt-4">{toLocaleString(parseFloat(row.reward_weight) * 100)}%</td>
-              <td className="text-center lg:text-center pt-4">{toLocaleString(tableState.getAdditionalYield(row.denom))}%</td>
+              <td className="text-center lg:text-center pt-4">{toLocalString(tableState.getTotalTokens(row.denom))}</td>
+              <td className="text-center lg:text-center pt-4">${toLocalString(tableState.getTotalValueStaked(row.denom))}</td>
+              <td className="text-center lg:text-center pt-4">{toLocalString(tableState.getTakeRate(row.denom))}%</td>
+              <td className="text-center lg:text-center pt-4">{toLocalString(parseFloat(row.reward_weight) * 100)}%</td>
+              <td className="text-center lg:text-center pt-4">{toLocalString(tableState.getAdditionalYield(row.denom))}%</td>
             </tr>
           ))}
         </tbody>

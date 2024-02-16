@@ -15,13 +15,11 @@ export const SUPPORTED_CHAINS: { [key: string]: Chain } = {
         name: "ampLuna",
         priceKey: "terra1ecgazyd0waaj3g7l9cmy5gulhxkps2gmxu9ghducvuypjq68mq2s5lvsct",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/ampLuna.svg",
-        color: "#324ab2",
       },
       "ibc/FBEE20115530F474F8BBE1460DA85437C3FBBFAF4A5DEBD71CA6B9C40559A161": {
         name: "stLuna",
         priceKey: "ibc/08095CEDEA29977C9DD0CE9A48329FDA622C183359D5F90CF04CC4FF80CBE431",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/stLUNA.svg",
-        color: "#fb0174",
       },
     },
   }),
@@ -41,34 +39,45 @@ export const SUPPORTED_CHAINS: { [key: string]: Chain } = {
         name: "ampLuna",
         priceKey: "terra1ecgazyd0waaj3g7l9cmy5gulhxkps2gmxu9ghducvuypjq68mq2s5lvsct",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/ampLuna.svg",
-        color: "#324ab2",
       },
       "ibc/40C29143BF4153B365089E40E437B7AA819672646C45BB0A5F1E10915A0B6708": {
         name: "bLuna",
         priceKey: "terra17aj4ty4sz4yhgm08na8drc0v03v2jwr3waxcqrwhajj729zhl7zqnpc0ml",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/bLuna.png",
-        color: "#ff7500",
+      },
+      "factory/migaloo1axtz4y7jyvdkkrflknv9dcut94xr5k8m6wete4rdrw4fuptk896su44x2z/uLP": {
+        name: "WHALE/wBTC",
+        lpInfo: {
+          contractAddr: "migaloo1axtz4y7jyvdkkrflknv9dcut94xr5k8m6wete4rdrw4fuptk896su44x2z",
+          tokensPriceKey: ["WHALE", "WBTC"],
+          tokensDecimals: [6, 8],
+        },
+        icon: [
+          "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/Whale.svg",
+          "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/wbtc.svg",
+        ],
       },
       "factory/migaloo1xv4ql6t6r8zawlqn2tyxqsrvjpmjfm6kvdfvytaueqe3qvcwyr7shtx0hj/uLP": {
-        name: "USDC-WHALE-LP",
-        priceKey: "factory/migaloo1xv4ql6t6r8zawlqn2tyxqsrvjpmjfm6kvdfvytaueqe3qvcwyr7shtx0hj/uLP",
+        name: "WHALE/USDC",
+        lpInfo: {
+          contractAddr: "migaloo1xv4ql6t6r8zawlqn2tyxqsrvjpmjfm6kvdfvytaueqe3qvcwyr7shtx0hj",
+          tokensPriceKey: ["WHALE","USDC"],
+          tokensDecimals: [6, 6]
+        },
         icon: [
-          "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/USDC.svg",
           "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/Whale.svg",
+          "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/USDC.svg",
         ],
-        color: "#3b74c5"
       },
       "factory/migaloo1erul6xyq0gk6ws98ncj7lnq9l4jn4gnnu9we73gdz78yyl2lr7qqrvcgup/ash": {
         name: "ASH",
-        priceKey: "factory/migaloo1erul6xyq0gk6ws98ncj7lnq9l4jn4gnnu9we73gdz78yyl2lr7qqrvcgup/ash",
+        priceKey: "ASH",
         icon: "images/ash.svg",
-        color: "#3CCD64"
       },
       "migaloo10nucfm2zqgzqmy7y7ls398t58pjt9cwjsvpy88y2nvamtl34rgmqt5em2v": {
         name: "mUSDC",
-        priceKey: "migaloo10nucfm2zqgzqmy7y7ls398t58pjt9cwjsvpy88y2nvamtl34rgmqt5em2v",
+        priceKey: "USDC",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/USDC.svg",
-        color: "#3b74c5"
       },
     },
   }),
@@ -88,20 +97,25 @@ export const SUPPORTED_CHAINS: { [key: string]: Chain } = {
         name: "rSWTH",
         priceKey: "rSWTH",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/rSWTH.svg",
-        color: "#324ab2",
       },
       "ibc/B3F639855EE7478750CC8F82072307ED6E131A8EFF20345E1D136B50C4E5EC36": {
         name: "ampWhale",
         priceKey: "ibc/B3F639855EE7478750CC8F82072307ED6E131A8EFF20345E1D136B50C4E5EC36",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/ampWHALE.svg",
-        color: "#324ab2",
       },
       "ibc/517E13F14A1245D4DE8CF467ADD4DA0058974CDCC880FA6AE536DBCA1D16D84E": {
         name: "bWhale",
         priceKey: "ibc/517E13F14A1245D4DE8CF467ADD4DA0058974CDCC880FA6AE536DBCA1D16D84E",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/bWHALE.png",
-        color: "#fb0174",
       },
     },
   }),
 };
+
+
+export interface CarbonInflationRes {
+  numberOfWeeks: string;
+  inflationRate: string;
+  last7DaysInflationRate: string;
+  last14DaysInflationRate: string;
+}

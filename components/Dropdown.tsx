@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "../styles/Dropdown.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DEFAULT_CHAIN, SUPPORTED_CHAINS } from "../const/chains";
@@ -8,8 +8,17 @@ import { DEFAULT_CHAIN, SUPPORTED_CHAINS } from "../const/chains";
 export default function Dropdown() {
   const params = useSearchParams();
   const [show, setShow] = useState<boolean>(false);
-  const [selected, setSelected] = useState<any>(SUPPORTED_CHAINS[params.get("selected") ?? DEFAULT_CHAIN]);
+  const [selected, setSelected] = useState<any>();
   const router = useRouter();
+
+  useEffect(() => {
+    if (SUPPORTED_CHAINS[params.get("selected") as any]) {
+      setSelected(SUPPORTED_CHAINS[params.get("selected") as string]);
+    }
+    else {
+      setSelected(SUPPORTED_CHAINS[DEFAULT_CHAIN]);
+    }
+  }, [])
 
   return (
     <div

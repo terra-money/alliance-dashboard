@@ -1,3 +1,4 @@
+import { Dec } from "@terra-money/feather.js";
 
 
 export class Chain implements ChainModel {
@@ -11,9 +12,7 @@ export class Chain implements ChainModel {
         contractAddress: string;
         denom: string;
     };
-    allianceCoins: {
-        [key: string]: AllianceCoin
-    };
+    allianceCoins: AllianceCoins;
     constructor(model: ChainModel) {
         this.id = model.id;
         this.bondDenom = model.bondDenom;
@@ -39,6 +38,11 @@ export class Chain implements ChainModel {
     }
 }
 
+export interface AllianceCoins {
+    [key: string]: AllianceCoin
+}
+
+
 export interface ChainModel {
     id: string;
     bondDenom: string;
@@ -59,14 +63,22 @@ export class AllianceCoin {
     name: string;
     priceKey?: string;
     icon?: string | string[];
-    color?: string;
-    hubContractAddr?: string;
+    lpInfo?: {
+        tokensDecimals: number[];
+        // This two properties can be determined from the key and name but
+        // that will lead to bad design so it's better to write them manually
+        contractAddr: string;
+        tokensPriceKey: string[];
+        // this two properties must be computed from the contract request
+        tokensAmount?: Dec[]; 
+        totalShare?: Dec; 
+    }
 
     constructor(model?: AllianceCoinModel) {
         this.name = model?.name || "";
         this.icon = model?.icon;
-        this.color = model?.color || "";
-        this.hubContractAddr = model?.hubContractAddr || "";
+        this.priceKey = model?.priceKey;
+        this.lpInfo = model?.lpInfo;
     }
 
     static fromAny(model: any): AllianceCoin {
@@ -77,6 +89,10 @@ export class AllianceCoin {
 interface AllianceCoinModel {
     name: string;
     icon?: string | string[];
-    color?: string;
-    hubContractAddr?: string;
+    priceKey?: string;
+    lpInfo?: {
+        contractAddr: string;
+        tokensPriceKey: string[];
+        tokensDecimals: number[];
+    }
 }
