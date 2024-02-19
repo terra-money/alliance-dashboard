@@ -10,6 +10,7 @@
   background: #2a2a2a;
   user-select: none;
   align-items: center;
+  min-height: 42px;
 }
 
 .select:hover {

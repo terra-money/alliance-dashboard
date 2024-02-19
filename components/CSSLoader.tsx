@@ -1,4 +1,4 @@
-import styles from '@/styles/CSSLoader.module.css';
+import styles from '../styles/CSSLoader.module.css';
 
 const CSSLoader = () => {
   return (

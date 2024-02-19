@@ -1,0 +1,24 @@
+.IconWrapper img {
+    width: 38px;
+    height: 38px;
+}
+
+.IconWrapper .ManyIcons {
+    position: relative;
+    width: 38px;
+    height: 38px;
+}
+
+.IconWrapper .ManyIcons img {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+}
+
+.IconWrapper .ManyIcons img:first-child {
+    right: 8px;
+}
+
+.IconWrapper .ManyIcons img:last-child {
+    right: -4px;
+}
