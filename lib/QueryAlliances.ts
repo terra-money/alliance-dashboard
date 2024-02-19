@@ -12,11 +12,15 @@ export const QueryAlliances = async (chain: Chain): Promise<AllianceAsset[]> => 
   // for the rates of the hub contract per each coin.
   if (chain.hasAllianceHub()) {
     const allianceHubAsset = alliances.find((a) => a.denom === chain.getAllianceHubDenom()) as AllianceAsset;
-    const alliancefromHub = await queryAllianceHubAssets(chain.getAllianceHubAddress(), allianceHubAsset);
+    // Remove the hub asset from the list of alliances
+    alliances.filter((a) => a.denom === chain.getAllianceHubDenom())
+    const alliancesfromHub = await queryAllianceHubAssets(chain.getAllianceHubAddress(), allianceHubAsset);
 
+    // Used to filter out any asset that is not available in
+    // application's state to avoid broken assets in the list.
     alliances = alliances
-      .concat(...alliancefromHub)
-      .filter((a) => a.denom !== chain.getAllianceHubDenom());
+      .concat(alliancesfromHub)
+      .filter(alliance => chain.allianceCoins[alliance.denom] !== undefined);
   }
 
   return alliances;

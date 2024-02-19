@@ -7,11 +7,21 @@ import { CarbonInflationRes } from "../const/chains";
 const INFLATION_CACHE: { [chainId: string]: Dec } = {};
 
 // If carbon would have used the standard API this would haven't been necessary
-export const GetInflationEndpoint = (chainId: string): Promise<any> => {
+export const GetInflationEndpoint = async (chainId: string): Promise<any> => {
     if (INFLATION_CACHE[chainId]) return Promise.resolve();
 
+
     if (chainId === "carbon-1") {
-        return fetch("https://api-insights.carbon.network/chain/inflation")
+        let res = await fetch("https://api-insights.carbon.network/chain/inflation")
+            .catch(_ => {
+                return Promise.resolve({
+                    result: {
+                        inflationRate: "0"
+                    }
+                })
+            });
+
+        return res;
     }
 
     return LCD.mint.inflation(chainId);
