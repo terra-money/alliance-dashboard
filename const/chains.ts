@@ -100,7 +100,7 @@ export const SUPPORTED_CHAINS: { [key: string]: Chain } = {
       },
       "ibc/B3F639855EE7478750CC8F82072307ED6E131A8EFF20345E1D136B50C4E5EC36": {
         name: "ampWhale",
-        priceKey: "ibc/B3F639855EE7478750CC8F82072307ED6E131A8EFF20345E1D136B50C4E5EC36",
+        priceKey: "AMPWHALE",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/ampWHALE.svg",
       },
       "ibc/517E13F14A1245D4DE8CF467ADD4DA0058974CDCC880FA6AE536DBCA1D16D84E": {
