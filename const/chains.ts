@@ -93,10 +93,10 @@ export const SUPPORTED_CHAINS: { [key: string]: Chain } = {
     },
     icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Terra.svg",
     allianceCoins: {
-      "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098": {
-        name: "rSWTH",
-        priceKey: "rSWTH",
-        icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/rSWTH.svg",
+      "factory/terra1vklefn7n6cchn0u962w3gaszr4vf52wjvd4y95t2sydwpmpdtszsqvk9wy/ampROAR": {
+        name: "ampRoar",
+        priceKey: "AMPROAR",
+        icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/ampROAR.png",
       },
       "ibc/B3F639855EE7478750CC8F82072307ED6E131A8EFF20345E1D136B50C4E5EC36": {
         name: "ampWhale",
@@ -107,6 +107,11 @@ export const SUPPORTED_CHAINS: { [key: string]: Chain } = {
         name: "bWhale",
         priceKey: "BWHALE",
         icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/bWHALE.png",
+      },
+      "ibc/0E90026619DD296AD4EF9546396F292B465BAB6B5BE00ABD6162AA1CE8E68098": {
+        name: "rSWTH",
+        priceKey: "rSWTH",
+        icon: "https://raw.githubusercontent.com/terra-money/station-assets/main/img/coins/rSWTH.svg",
       },
     },
   }),
